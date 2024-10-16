@@ -9,7 +9,6 @@ app.use(cors());
 app.use(bodyparser.json());
 
 
-
 app.get('/' , (req,res)=>{
     res.send("Welcome to Lansub Server!")
 })
