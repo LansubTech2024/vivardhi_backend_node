@@ -1,65 +1,61 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
+const json2csv = require('json2csv').parse;
+const csv2json = require('csvtojson');
 const Device = require('../models/sql_data.model');
 
-// Import JSON data, clean it, and insert it into the database
-const importMachines = async (req, res) => {
-    try {
-        // Dynamically construct the file path using 'path'
-        const jsonFilePath = path.join(__dirname, '../Data/data.json');
+exports.importMachines = async (req, res) => {
+  try {
+    const jsonFilePath = path.join(__dirname, '../Data', 'data.json');
+    const jsonData = await fs.readFile(jsonFilePath, 'utf8');
+    const data = JSON.parse(jsonData);
 
-        // Load JSON data from the file
-        const data = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
-
-        if (!Array.isArray(data)) {
-            return res.status(400).json({ error: 'Expected a list of objects in JSON file.' });
-        }
-
-        // Extract relevant columns (all 11 columns in this case)
-        const keysToExtract = [
-            'CHW_IN_TEMP', 'CHW_OUT_TEMP', 'COW_IN_TEMP', 'COW_OUT_TEMP', 'DEVICE_DATE'
-        ];
-        
-        const filteredData = data.map(item => {
-            return keysToExtract.reduce((obj, key) => {
-                obj[key.toLowerCase()] = item[key] || null;  // Convert keys to lowercase
-                return obj;
-            }, {});
-        });
-
-        // Clean data (remove null values, duplicates)
-        const cleanedData = filteredData
-            .filter(row => row.chw_in_temp && row.device_date)  // Filter out rows with nulls in critical fields
-            .filter((row, index, self) =>
-                index === self.findIndex((t) => t.chw_in_temp === row.chw_in_temp)
-            );
-
-        // Insert new data with a 3-second delay
-        let newMachinesCount = 0;
-        for (let i = 0; i < cleanedData.length; i++) {
-            const row = cleanedData[i];
-
-            // Check if the device already exists
-            const existingDevice = await Device.getDeviceByTemp(row.chw_in_temp);
-            if (!existingDevice) {
-                await Device.createDevice(row); // Insert new device record
-                newMachinesCount++;
-                console.log(`Inserted: ${row.chw_in_temp}`);
-            }
-
-            // Add a delay of 3 seconds
-            await new Promise(resolve => setTimeout(resolve, 3000));
-        }
-
-        res.status(201).json({
-            success: `${newMachinesCount} new records successfully inserted!`,
-            total_records: cleanedData.length
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    if (!Array.isArray(data)) {
+      return res.status(400).json({ error: "Expected a list of objects in JSON file." });
     }
-};
 
-module.exports = {
-    importMachines
+    const csv = json2csv(data);
+    const jsonArray = await csv2json().fromString(csv);
+
+    const keysToExtract = ['CHW_IN_TEMP', 'CHW_OUT_TEMP', 'COW_IN_TEMP', 'COW_OUT_TEMP', 'TIME'];
+    const filteredData = jsonArray.map(item => 
+      keysToExtract.reduce((acc, key) => {
+        if (item[key]) acc[key] = item[key];
+        return acc;
+      }, {})
+    ).filter(item => Object.keys(item).length > 0);
+
+    const newMachines = [];
+    for (const item of filteredData) {
+      if (item.device_date) {
+        item.device_date = new Date(item.device_date);
+      }
+
+      const [machine, created] = await Device.findOrCreate({
+        where: { 
+            chw_in_temp: item.CHW_IN_TEMP,
+            chw_out_temp: item.CHW_OUT_TEMP,
+            cow_in_temp: item.COW_IN_TEMP,
+            cow_out_temp: item.COW_OUT_TEMP,
+            device_date: item.TIME
+         },
+        defaults: item,
+      });
+
+      if (created) {
+        newMachines.push(machine);
+        await new Promise(resolve => setTimeout(resolve, 3000)); // 3 seconds delay
+      }
+    }
+
+    const totalRecords = await Device.count();
+
+    res.status(201).json({
+      success: `${newMachines.length} new records successfully inserted into MySQL!`,
+      total_records: totalRecords,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
 };
