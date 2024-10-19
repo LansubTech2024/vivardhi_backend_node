@@ -17,7 +17,7 @@ exports.importMachines = async (req, res) => {
     const csv = json2csv(data);
     const jsonArray = await csv2json().fromString(csv);
 
-    const keysToExtract = ['CHW_IN_TEMP', 'CHW_OUT_TEMP', 'COW_IN_TEMP', 'COW_OUT_TEMP', 'TIME'];
+    const keysToExtract = ['CHW_IN_TEMP', 'CHW_OUT_TEMP', 'COW_IN_TEMP', 'COW_OUT_TEMP', 'TIME','Name','Working','Worked','Leave','Working_hours','Shift','Allocated'];
     const filteredData = jsonArray.map(item => 
       keysToExtract.reduce((acc, key) => {
         if (item[key]) acc[key] = item[key];
@@ -37,7 +37,15 @@ exports.importMachines = async (req, res) => {
             chw_out_temp: item.CHW_OUT_TEMP,
             cow_in_temp: item.COW_IN_TEMP,
             cow_out_temp: item.COW_OUT_TEMP,
-            device_date: item.TIME
+            device_date: item.TIME,
+            name: item.Name,
+            working: item.Working,
+            worked: item.Worked,
+            leave: item.Leave,
+            working_hours:item.Working_hours,
+            shift:item.Shift,
+            allocated:item.Allocated
+
          },
         defaults: item,
       });

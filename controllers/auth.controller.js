@@ -60,41 +60,41 @@ exports.login = async (req, res) => {
   }
 };
 
-// Update Profile function
 exports.updateProfile = async (req, res) => {
-    try {
-        // Check if req.user exists
-        if (!req.user) {
-            return res.status(401).json({ error: 'Authentication required' });
-        }
+  try {
+      if (!req.user?.userId) {
+          return res.status(401).json({ error: 'Authentication required' });
+      }
 
-        // Check if req.user.userId exists
-        if (!req.user.userId) {
-            return res.status(401).json({ error: 'User ID not found in token' });
-        }
+      const user = await User.findByPk(req.user.userId);
+      if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+      }
 
-        const user = await User.findByPk(req.user.userId);
+      const { name, email } = req.body;
 
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+      const changes = {};
+      if (name && name !== user.name) changes.name = name;
+      if (email && email !== user.email) {
+          // Check if the new email is unique
+          const existingUser = await User.findOne({ where: { email } });
+          if (existingUser && existingUser.id !== user.id) {
+              return res.status(400).json({ error: 'Email already in use' });
+          }
+          changes.email = email;
+      }
 
-        const { name, email } = req.body;
-
-        // Check if any changes were made
-        const changes = {};
-        if (name && name !== user.name) changes.name = name;
-        if (email && email !== user.email) changes.email = email;
-
-        // Update user data only if changes were made
-        if (Object.keys(changes).length > 0) {
-            await user.update(changes);
-            res.json({ message: 'Profile updated successfully', user: user.toJSON() });
-        } else {
-            res.json({ message: 'No changes were made', user: user.toJSON() });
-        }
-    } catch (error) {
-        console.error('Error in updateProfile:', error);
-        res.status(500).json({ error: error.message });
-    }
+      if (Object.keys(changes).length > 0) {
+          await user.update(changes);
+          res.json({ message: 'Profile updated successfully', user: user.toJSON() });
+      } else {
+          res.json({ message: 'No changes were made', user: user.toJSON() });
+      }
+  } catch (error) {
+      console.error('Error in updateProfile:', error);
+      if (error.name === 'SequelizeValidationError') {
+          return res.status(400).json({ error: 'Invalid input data', details: error.errors });
+      }
+      res.status(500).json({ error: 'An unexpected error occurred' });
+  }
 };
