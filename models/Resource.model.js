@@ -2,39 +2,25 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../DB_connection/db_connection'); // Make sure to adjust the path based on your project structure
 
-const Resource = sequelize.define('Resource', {
-    name: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-    },
-    working: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    worked: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    leave: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    working_hours: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    shift: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-    },
-    allocated: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-    },
+const ResourceModel = sequelize.define('ResourceModel', {
+    name: DataTypes.STRING(100),
+        
+    working:DataTypes.INTEGER,
+        
+    worked: DataTypes.INTEGER,
+        
+    leave: DataTypes.INTEGER,
+        
+    working_hours:DataTypes.INTEGER,
+       
+    shift:  DataTypes.STRING(50),
+        
+    allocated: DataTypes.STRING(50),
+        
 }, {
-    tableName: 'temp_table', // Use your actual table name
+    tableName: 'devices', // Use your actual table name
     timestamps: false // No timestamps since you're managing it manually
 });
 
-module.exports = Resource;
+module.exports = ResourceModel;
 

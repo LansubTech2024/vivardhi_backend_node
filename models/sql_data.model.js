@@ -22,6 +22,7 @@ const Device = sequelize.define('Device', {
     },
     vaccum_pr: {
         type: DataTypes.FLOAT,
+    },
     name: {
         type: DataTypes.STRING,
     },
@@ -47,10 +48,6 @@ const Device = sequelize.define('Device', {
         type: DataTypes.DATE,
     },
 
-},
-
-    tableName: 'temp_table',
-    timestamps: true,
 });
 
 module.exports = Device;

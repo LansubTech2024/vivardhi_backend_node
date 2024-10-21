@@ -18,7 +18,7 @@ exports.importMachines = async (req, res) => {
     const jsonArray = await csv2json().fromString(csv);
 
 
-    const keysToExtract = ['CHW_IN_TEMP', 'CHW_OUT_TEMP', 'COW_IN_TEMP', 'COW_OUT_TEMP', 'TIME','Name','Working','Worked','Leave','Working_hours','Shift','Allocated'];
+    const keysToExtract = ['CHW_IN_TEMP', 'CHW_OUT_TEMP', 'COW_IN_TEMP', 'COW_OUT_TEMP','VACCUM_PR', 'TIME','Name','Working','Worked','Leave','Working_hours','Shift','Allocated'];
     const filteredData = jsonArray.map(item => 
       keysToExtract.reduce((acc, key) => {
         if (item[key]) acc[key] = item[key];

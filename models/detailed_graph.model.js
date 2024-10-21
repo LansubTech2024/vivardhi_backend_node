@@ -28,7 +28,7 @@ const DetailedGraphModel = sequelize.define('DetailedGraphModel', {
         field: 'device_date'
       }
 }, {
-    tableName: 'machines', // Use your actual table name
+    tableName: 'devices', // Use your actual table name
     timestamps: false
 });
 
