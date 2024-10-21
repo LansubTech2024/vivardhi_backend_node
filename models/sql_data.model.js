@@ -20,12 +20,15 @@ const Device = sequelize.define('Device', {
     cow_out_temp: {
         type: DataTypes.FLOAT,
     },
+    vaccum_pr: {
+        type: DataTypes.FLOAT,
+    },
     device_date: {
         type: DataTypes.DATE,
     },
 }, {
-    tableName: 'devices',
-    timestamps: true,
+    tableName: 'machines',
+    timestamps: false,
 });
 
 module.exports = Device;

@@ -1,33 +1,17 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); // Your database connection
+const sequelize = require('../DB_connection/db_connection'); // Import DB connection
 
+// Define the model
 const GraphModel = sequelize.define('GraphModel', {
-    device_date: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    chw_in_temp: {
-        type: DataTypes.FLOAT,
-        allowNull: true
-    },
-    chw_out_temp: {
-        type: DataTypes.FLOAT,
-        allowNull: true
-    },
-    cow_in_temp: {
-        type: DataTypes.FLOAT,
-        allowNull: true
-    },
-    cow_out_temp: {
-        type: DataTypes.FLOAT,
-        allowNull: true
-    },
-    vaccum_pr: {
-        type: DataTypes.FLOAT,
-        allowNull: true
-    }
+    chw_in_temp: DataTypes.FLOAT,
+    chw_out_temp: DataTypes.FLOAT,
+    cow_in_temp: DataTypes.FLOAT,
+    cow_out_temp: DataTypes.FLOAT,
+    vaccum_pr: DataTypes.FLOAT,
+    device_date: DataTypes.DATE,
 }, {
-    tableName: 'graph_models' // Update with your actual table name
+    tableName: 'machines', // Use your actual table name
+    timestamps: false
 });
 
 module.exports = GraphModel;
