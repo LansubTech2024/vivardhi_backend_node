@@ -2,7 +2,10 @@
 const { Sequelize } = require('sequelize');
 
 
+
 const sequelize = new Sequelize('node', 'root', 'sys@0805', {
+
+
     host: 'localhost',
     dialect: 'mysql',
 });

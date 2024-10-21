@@ -29,7 +29,9 @@ const DetailedGraphModel = sequelize.define('DetailedGraphModel', {
       }
 }, {
     tableName: 'devices', // Use your actual table name
-    timestamps: false
+
+    timestamps: true
+
 });
 
 module.exports = DetailedGraphModel;

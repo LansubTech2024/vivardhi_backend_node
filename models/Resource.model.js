@@ -4,6 +4,7 @@ const sequelize = require('../DB_connection/db_connection'); // Make sure to adj
 
 const ResourceModel = sequelize.define('ResourceModel', {
     name: DataTypes.STRING(100),
+
         
     working:DataTypes.INTEGER,
         
@@ -20,6 +21,7 @@ const ResourceModel = sequelize.define('ResourceModel', {
 }, {
     tableName: 'devices', // Use your actual table name
     timestamps: false // No timestamps since you're managing it manually
+
 });
 
 module.exports = ResourceModel;
