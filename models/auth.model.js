@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../DB_connection/db_connection');
 const bcrypt = require('bcrypt');
 
-const User = sequelize.define('User', {
+const LoginUser = sequelize.define('LoginUser', {
   name: {
     type: DataTypes.STRING,
     allowNull: false
@@ -19,17 +19,7 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false
   }
-}, {
-  hooks: {
-    beforeCreate: async (user) => {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(user.password, salt);
-    }
-  }
 });
 
-User.prototype.validatePassword = async function(password) {
-  return await bcrypt.compare(password, this.password);
-};
 
-module.exports = User;
+module.exports = LoginUser;

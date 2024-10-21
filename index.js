@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+require('dotenv').config();
 const bodyparser = require('body-parser')
 const  sequelize  = require('./DB_connection/db_connection');
 const PORT = process.env.PORT || 5000
