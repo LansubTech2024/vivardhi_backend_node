@@ -10,8 +10,8 @@ const GraphModel = sequelize.define('GraphModel', {
     vaccum_pr: DataTypes.FLOAT,
     device_date: DataTypes.DATE,
 }, {
-    tableName: 'machines', // Use your actual table name
-    timestamps: false
+    tableName: 'devices', // Use your actual table name
+    timestamps: true
 });
 
 module.exports = GraphModel;
