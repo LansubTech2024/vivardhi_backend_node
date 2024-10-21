@@ -1,11 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
+const authMiddleware = require('../Middleware/auth.middleware');
 
 // Signup route
-router.post('/signup', authController.signup);
+router.post('/signup', authController.SignUp);
 
 // Login route
-router.post('/login', authController.login);
+router.post('/login', authController.SignIn);
+router.put('/updateprofile',authMiddleware,authController.updateStudentProfile);
+
+router.post('/forgot-password', authController.ForgotPassword);
+router.post('/reset-password/:randomString/:expirationTimestamp', authController.ResetPassword);
 
 module.exports = router;

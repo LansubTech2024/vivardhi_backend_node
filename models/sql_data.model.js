@@ -22,13 +22,35 @@ const Device = sequelize.define('Device', {
     },
     vaccum_pr: {
         type: DataTypes.FLOAT,
+    name: {
+        type: DataTypes.STRING,
+    },
+    working: {
+        type: DataTypes.INTEGER,
+    },
+    worked: {
+        type: DataTypes.INTEGER,
+    },
+    leave: {
+        type: DataTypes.INTEGER,
+    },
+    working_hours: {
+        type: DataTypes.INTEGER,
+    },
+    shift: {
+        type: DataTypes.STRING,
+    },
+    allocated: {
+        type: DataTypes.STRING,
     },
     device_date: {
         type: DataTypes.DATE,
     },
-}, {
-    tableName: 'machines',
-    timestamps: false,
+
+},
+
+    tableName: 'temp_table',
+    timestamps: true,
 });
 
 module.exports = Device;

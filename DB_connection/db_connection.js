@@ -2,7 +2,7 @@
 const { Sequelize } = require('sequelize');
 
 
-const sequelize = new Sequelize('mes_database', 'root', 'Lansub@2024', {
+const sequelize = new Sequelize('vivardhi', 'root', 'sys@0805', {
     host: 'localhost',
     dialect: 'mysql',
 });
@@ -17,6 +17,7 @@ async function testConnection() {
   }
   
   testConnection();
+
 
 
 module.exports = sequelize;
