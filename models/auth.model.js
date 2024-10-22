@@ -1,8 +1,8 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes} = require('sequelize');
 const sequelize = require('../DB_connection/db_connection');
 const bcrypt = require('bcrypt');
 
-const LoginUser = sequelize.define('LoginUser', {
+const SecureLogin = sequelize.define('SecureLogin', {
   name: {
     type: DataTypes.STRING,
     allowNull: false
@@ -18,8 +18,20 @@ const LoginUser = sequelize.define('LoginUser', {
   password: {
     type: DataTypes.STRING,
     allowNull: false
-  }
+  },
+  randomString: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
 });
 
 
-module.exports = LoginUser;
+module.exports = SecureLogin;
