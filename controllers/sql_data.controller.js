@@ -1,66 +1,174 @@
-const fs = require('fs').promises;
-const path = require('path');
-const json2csv = require('json2csv').parse;
-const csv2json = require('csvtojson');
-const Device = require('../models/sql_data.model');
+const fs = require("fs").promises;
+const path = require("path");
+const Device = require("../models/sql_data.model");
 
 exports.importMachines = async (req, res) => {
   try {
-    const jsonFilePath = path.join(__dirname, '../Data', 'data.json');
-    const jsonData = await fs.readFile(jsonFilePath, 'utf8');
+    // Specify the data file path manually
+    const jsonFilePath = path.join(__dirname, "../Data", "new_datas.json");
+    const jsonData = await fs.readFile(jsonFilePath, "utf8");
     const data = JSON.parse(jsonData);
 
-    if (!Array.isArray(data)) {
-      return res.status(400).json({ error: "Expected a list of objects in JSON file." });
+    if (!data.zones || !Array.isArray(data.zones)) {
+      return res
+        .status(400)
+        .json({ error: "Expected zones array in JSON file." });
     }
 
-    const csv = json2csv(data);
-    const jsonArray = await csv2json().fromString(csv);
+    const newMachines = new Set(); // Using Set to avoid duplicates
 
+    for (const zone of data.zones) {
+      for (const monthlyData of zone.monthlyData) {
 
-    const keysToExtract = ['CHW_IN_TEMP', 'CHW_OUT_TEMP', 'COW_IN_TEMP', 'COW_OUT_TEMP','VACCUM_PR', 'TIME','Name','Working','Worked','Leave','Working_hours','Shift','Allocated'];
-    const filteredData = jsonArray.map(item => 
-      keysToExtract.reduce((acc, key) => {
-        if (item[key]) acc[key] = item[key];
-        return acc;
-      }, {})
-    ).filter(item => Object.keys(item).length > 0);
+        const record = {
+          zoneName: zone.zoneName,
+          machineId: zone.machineId,
+          date: new Date(monthlyData.date),
+          actualRunTime: monthlyData.availability?.actualRunTime || null,
+          plannedTime: monthlyData.availability?.plannedTime || null,
+          manpower: monthlyData.availability?.manpower || null,
+          uptime: monthlyData.availability?.uptime || null,
+          totalDowntimeDuration:
+            monthlyData.availability?.downtime?.totalDuration || null,
+          downtimeReasons: monthlyData.availability?.downtime?.reasons?.[0]?.reason || 0,
+          totalPieces: monthlyData.performance?.totalPieces || null,
+          target: monthlyData.performance?.target || null,
+          efficiency:
+            monthlyData.performance?.totalPieces &&
+            monthlyData.performance?.target
+              ? Math.round(
+                  (monthlyData.performance.totalPieces /
+                    monthlyData.performance.target) *
+                    100
+                )
+              : null,
+          goodPieces: monthlyData.quality?.goodPieces || null,
+          totalProduction: monthlyData.quality?.totalProduction || null,
+          rawMaterialUsed: monthlyData.quality?.rawMaterialUsed || null,
+          defectRate:
+            monthlyData.quality?.totalProduction &&
+            monthlyData.quality?.goodPieces
+              ? Math.round(
+                  ((monthlyData.quality.totalProduction -
+                    monthlyData.quality.goodPieces) /
+                    monthlyData.quality.totalProduction) *
+                    100
+                )
+              : null,
+          voltage: monthlyData.powerUsage?.voltage || null,
+          current: monthlyData.powerUsage?.current || null,
+          powerConsumed: monthlyData.powerUsage?.powerConsumed || null,
+          totalPowerDowntimeDuration:
+            monthlyData.powerUsage?.downtime?.totalDuration || null,
+          powerDowntimeReasons: monthlyData.powerUsage?.downtime?.reasons?.[0]?.reason || null,
+          rawMaterialInput:
+            monthlyData.materialManagement?.rawMaterial?.input || null,
+          rawMaterialOutput:
+            monthlyData.materialManagement?.rawMaterial?.output || null,
+          wasteScrap: monthlyData.materialManagement?.waste?.scrap || null,
+          wasteDefect: monthlyData.materialManagement?.waste?.defect || null,
+          wasteRecycled:
+            monthlyData.materialManagement?.waste?.recycled || null,
 
-    const newMachines = [];
-    for (const item of filteredData) {
-      if (item.device_date) {
-        item.device_date = new Date(item.device_date);
+          // Inventory data keys
+          rawMaterialId:
+            monthlyData.inventoryAnalysis?.rawMaterials?.[0]?.materialId ||
+            null,
+          rawMaterialName:
+            monthlyData.inventoryAnalysis?.rawMaterials?.[0]?.materialName ||
+            null,
+          currentStock:
+            monthlyData.inventoryAnalysis?.rawMaterials?.[0]?.currentStock ||
+            null,
+          minimumRequired:
+            monthlyData.inventoryAnalysis?.rawMaterials?.[0]?.minimumRequired ||
+            null,
+
+          // Finished Goods
+          finishedGoodId:
+            monthlyData.inventoryAnalysis?.finishedGoods?.[0]?.productId || null,
+          finishedGoodName:
+            monthlyData.inventoryAnalysis?.finishedGoods?.[0]?.productName || null,
+          finishedGoodCurrentStock:
+            monthlyData.inventoryAnalysis?.finishedGoods?.[0]?.currentStock || null,
+          finishedGoodMinimumRequired:
+            monthlyData.inventoryAnalysis?.finishedGoods?.[0]?.minimumRequired || null,
+
+          // Resource allocation keys
+          workerId:
+            monthlyData.resourceAllocation?.manpower?.[0]?.workerId || null,
+          workerName:
+            monthlyData.resourceAllocation?.manpower?.[0]?.workerName || null,
+          role: monthlyData.resourceAllocation?.manpower?.[0]?.role || null,
+          allocatedHours:
+            monthlyData.resourceAllocation?.manpower?.[0]?.allocatedHours ||
+            null,
+          workedHours:
+            monthlyData.resourceAllocation?.manpower?.[0]?.workedHours ||
+            null,
+          leave:
+            monthlyData.resourceAllocation?.manpower?.[0]?.leave ||
+            null,
+          currentShift:
+            monthlyData.resourceAllocation?.manpower?.[0]?.currentShift || null,
+          allocation:
+            monthlyData.resourceAllocation?.manpower?.[0]?.allocation || null,
+          equipmentId:
+            monthlyData.resourceAllocation?.equipment?.[0]?.equipmentId || null,
+          equipmentName:
+            monthlyData.resourceAllocation?.equipment?.[0]?.equipmentName ||
+            null,
+          equipmentAllocatedHours:
+            monthlyData.resourceAllocation?.equipment?.[0]?.allocatedHours ||
+            null,
+          utilizationRate:
+            monthlyData.resourceAllocation?.equipment?.[0]?.utilizationRate ||
+            null,
+
+          // Production rate fields
+          targetProduction:
+            monthlyData.productionTargets?.targetProduction || null,
+          actualProduction:
+            monthlyData.productionTargets?.actualProduction || null,
+          overallProductivity:
+            monthlyData.productionTargets?.overallProductivity || null,
+
+          // Tool management fields
+          toolInUseId: monthlyData.toolManagement?.toolsInUse?.[0]?.toolId || null,
+          toolInUseName:
+            monthlyData.toolManagement?.toolsInUse?.[0]?.toolName || null,
+          toolInUseUsageTime:
+            monthlyData.toolManagement?.toolsInUse?.[0]?.usageTime || null,
+          toolInUseCondition:
+            monthlyData.toolManagement?.toolsInUse?.[0]?.condition || null,
+          toolInUseTotalOperation:monthlyData.toolManagement?.toolsInUse?.[0]?.productivity?.totalOperations || null,
+          toolInUseSuccessOperation:monthlyData.toolManagement?.toolsInUse?.[0]?.productivity?.successfulOperations || null,
+          toolInUseEfficiency:monthlyData.toolManagement?.toolsInUse?.[0]?.productivity?.efficiency || null,
+          totalTools: monthlyData.toolManagement?.totalTools || null,
+          toolsAvailable: monthlyData.toolManagement?.toolsAvailable || null,
+        };
+
+        // Add record only if it does not have null values for critical fields
+        if (Object.values(record).some((value) => value !== null)) {
+          newMachines.add(JSON.stringify(record)); // Add unique records
+        }
       }
+    }
 
-      const [machine, created] = await Device.findOrCreate({
-        where: { 
-            chw_in_temp: item.CHW_IN_TEMP,
-            chw_out_temp: item.CHW_OUT_TEMP,
-            cow_in_temp: item.COW_IN_TEMP,
-            cow_out_temp: item.COW_OUT_TEMP,
-            vaccum_pr: item.VACCUM_PR,
-            device_date: item.TIME,
-            name: item.Name,
-            working: item.Working,
-            worked: item.Worked,
-            leave: item.Leave,
-            working_hours:item.Working_hours,
-            shift:item.Shift,
-            allocated:item.Allocated
-         },
-        defaults: item,
-      });
+    for (const machine of newMachines) {
+      const record = JSON.parse(machine);
 
-      if (created) {
-        newMachines.push(machine);
-        await new Promise(resolve => setTimeout(resolve, 3000)); // 3 seconds delay
-      }
+      // Insert the record into the database
+      await Device.create(record); // Adjust based on your model's create method
+
+      // Wait for 2 seconds before the next insertion
+      await new Promise((resolve) => setTimeout(resolve, 2000));
     }
 
     const totalRecords = await Device.count();
 
     res.status(201).json({
-      success: `${newMachines.length} new records successfully inserted into MySQL!`,
+      success: `${newMachines.size} new records successfully inserted into MySQL!`,
       total_records: totalRecords,
     });
   } catch (error) {
