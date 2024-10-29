@@ -11,7 +11,10 @@ const GraphModel = sequelize.define('GraphModel', {
     device_date: DataTypes.DATE,
 }, {
     tableName: 'devices', // Use your actual table name
+
+
     timestamps: true
+
 });
 
 module.exports = GraphModel;

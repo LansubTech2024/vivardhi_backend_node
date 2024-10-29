@@ -14,7 +14,9 @@ def generate_graphs_data(data):
     device_dates = [entry['device_date'] for entry in data]
 
     # Calculate total entries
-    total_entries_stats = len(data)
+    total_entries_stats = {
+    'total_entries': len(data)
+    }
 
     # Calculate min and max for CHW in and out temperatures
     chw_in_temp_stats = {'min_chw_in_temp': min(chw_in_temps), 'max_chw_in_temp': max(chw_in_temps)}
