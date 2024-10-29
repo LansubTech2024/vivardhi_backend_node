@@ -1,0 +1,904 @@
+{
+  "zones": [
+    {
+      "zoneName": "Zone A",
+      "machineId": "M1",
+      "monthlyData": [
+        {
+          "date": "01/10/2024",
+          "availability": {
+            "actualRunTime": 400,
+            "plannedTime": 420,
+            "manpower": 10,
+            "uptime": 380,
+            "downtime": {
+              "totalDuration": 40,
+              "reasons": [
+                {
+                  "reason": "Maintenance",
+                  "duration": 20
+                },
+                {
+                  "reason": "Power Outage",
+                  "duration": 20
+                }
+              ]
+            }
+          },
+          "performance": {
+            "totalPieces": 200,
+            "target": 220
+          },
+          "quality": {
+            "goodPieces": 190,
+            "totalProduction": 200,
+            "rawMaterialUsed": 500
+          },
+          "powerUsage": {
+            "voltage": 220,
+            "current": 15,
+            "powerConsumed": 3300,
+            "downtime": {
+              "totalDuration": 30,
+              "reasons": [
+                {
+                  "reason": "Power Outage",
+                  "duration": 30
+                }
+              ]
+            }
+          },
+          "toolManagement": {
+            "toolsInUse": [
+              {
+                "toolId": "T1",
+                "toolName": "Drill",
+                "usageTime": 120,
+                "lastMaintenance": "2024-10-05",
+                "condition": "Good",
+                "productivity": {
+                  "totalOperations": 400,
+                  "successfulOperations": 380,
+                  "efficiency": 95
+                }
+              }
+            ],
+            "totalTools": 5,
+            "toolsAvailable": 3
+          },
+          "materialManagement": {
+            "rawMaterial": {
+              "input": 700,
+              "output": 500
+            },
+            "waste": {
+              "scrap": 100,
+              "defect": 20,
+              "recycled": 30
+            }
+          },
+          "productionTargets": {
+            "targetProduction": 220,
+            "actualProduction": 200,
+            "overallProductivity": 91
+          },
+          "inventoryAnalysis": {
+            "rawMaterials": [
+              {
+                "materialId": "RM1",
+                "materialName": "Steel",
+                "currentStock": 300,
+                "minimumRequired": 200
+              },
+              {
+                "materialId": "RM2",
+                "materialName": "Plastic",
+                "currentStock": 150,
+                "minimumRequired": 100
+              }
+            ],
+            "finishedGoods": [
+              {
+                "productId": "FG1",
+                "productName": "Product A",
+                "currentStock": 80,
+                "minimumRequired": 50
+              },
+              {
+                "productId": "FG2",
+                "productName": "Product B",
+                "currentStock": 40,
+                "minimumRequired": 30
+              }
+            ]
+          },
+          "resourceAllocation": {
+            "manpower": [
+              {
+                "workerId": "W1",
+                "workerName": "John Doe",
+                "role": "Operator",
+                "allocatedHours": 10,
+                "workedHours" : 10,
+                "leave" : 0,
+                "currentShift": "Morning",
+                "allocation" : "Allocated"
+              },
+              {
+                "workerId": "W2",
+                "workerName": "Jane Smith",
+                "role": "Technician",
+                "allocatedHours": 10,
+                "workedHours" : 8,
+                "leave" : 2,
+                "currentShift": "Evening",
+                "allocation" : "Allocated"
+              }
+            ],
+            "equipment": [
+              {
+                "equipmentId": "E1",
+                "equipmentName": "Forklift",
+                "allocatedHours": 4,
+                "utilizationRate": 80
+              },
+              {
+                "equipmentId": "E2",
+                "equipmentName": "CNC Machine",
+                "allocatedHours": 7,
+                "utilizationRate": 75
+              }
+            ]
+          }
+        },
+        {
+          "date": "02/10/2024",
+          "availability": {
+            "actualRunTime": 410,
+            "plannedTime": 420,
+            "manpower": 10,
+            "uptime": 390,
+            "downtime": {
+              "totalDuration": 30,
+              "reasons": [
+                {
+                  "reason": "Maintenance",
+                  "duration": 15
+                },
+                {
+                  "reason": "Power Outage",
+                  "duration": 15
+                }
+              ]
+            }
+          },
+          "performance": {
+            "totalPieces": 210,
+            "target": 220
+          },
+          "quality": {
+            "goodPieces": 200,
+            "totalProduction": 210,
+            "rawMaterialUsed": 520
+          },
+          "powerUsage": {
+            "voltage": 220,
+            "current": 15,
+            "powerConsumed": 3400,
+            "downtime": {
+              "totalDuration": 25,
+              "reasons": [
+                {
+                  "reason": "Power Outage",
+                  "duration": 25
+                }
+              ]
+            }
+          },
+          "toolManagement": {
+            "toolsInUse": [
+              {
+                "toolId": "T1",
+                "toolName": "Drill",
+                "usageTime": 125,
+                "lastMaintenance": "2024-10-05",
+                "condition": "Good",
+                "productivity": {
+                  "totalOperations": 410,
+                  "successfulOperations": 390,
+                  "efficiency": 95
+                }
+              }
+            ],
+            "totalTools": 5,
+            "toolsAvailable": 3
+          },
+          "materialManagement": {
+            "rawMaterial": {
+              "input": 710,
+              "output": 520
+            },
+            "waste": {
+              "scrap": 90,
+              "defect": 10,
+              "recycled": 25
+            }
+          },
+          "productionTargets": {
+            "targetProduction": 220,
+            "actualProduction": 210,
+            "overallProductivity": 95
+          },
+          "inventoryAnalysis": {
+            "rawMaterials": [
+              {
+                "materialId": "RM1",
+                "materialName": "Steel",
+                "currentStock": 290,
+                "minimumRequired": 200
+              },
+              {
+                "materialId": "RM2",
+                "materialName": "Plastic",
+                "currentStock": 140,
+                "minimumRequired": 100
+              }
+            ],
+            "finishedGoods": [
+              {
+                "productId": "FG1",
+                "productName": "Product A",
+                "currentStock": 90,
+                "minimumRequired": 50
+              },
+              {
+                "productId": "FG2",
+                "productName": "Product B",
+                "currentStock": 45,
+                "minimumRequired": 30
+              }
+            ]
+          },
+          "resourceAllocation": {
+            "manpower": [
+              {
+                "workerId": "W1",
+                "workerName": "John Doe",
+                "role": "Operator",
+                "allocatedHours": 10,
+                "workedHours" : 10,
+                "leave" : 0,
+                "currentShift": "Morning",
+                "allocation" : "Not Allocated"
+              },
+              {
+                "workerId": "W2",
+                "workerName": "Jane Smith",
+                "role": "Technician",
+                "allocatedHours": 10,
+                "workedHours" : 8,
+                "leave" : 2,
+                "currentShift": "Evening",
+                "allocation" : "Allocated"
+              }
+            ],
+            "equipment": [
+              {
+                "equipmentId": "E1",
+                "equipmentName": "Forklift",
+                "allocatedHours": 5,
+                "utilizationRate": 85
+              },
+              {
+                "equipmentId": "E2",
+                "equipmentName": "CNC Machine",
+                "allocatedHours": 7,
+                "utilizationRate": 80
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "zoneName": "Zone B",
+      "machineId": "M3",
+      "monthlyData": [
+        {
+          "date": "01/10/2024",
+          "availability": {
+            "actualRunTime": 380,
+            "plannedTime": 400,
+            "manpower": 8,
+            "uptime": 360,
+            "downtime": {
+              "totalDuration": 40,
+              "reasons": [
+                {
+                  "reason": "Equipment Failure",
+                  "duration": 30
+                },
+                {
+                  "reason": "Supply Chain Delay",
+                  "duration": 10
+                }
+              ]
+            }
+          },
+          "performance": {
+            "totalPieces": 180,
+            "target": 200
+          },
+          "quality": {
+            "goodPieces": 170,
+            "totalProduction": 180,
+            "rawMaterialUsed": 450
+          },
+          "powerUsage": {
+            "voltage": 220,
+            "current": 12,
+            "powerConsumed": 2800,
+            "downtime": {
+              "totalDuration": 20,
+              "reasons": [
+                {
+                  "reason": "Power Outage",
+                  "duration": 20
+                }
+              ]
+            }
+          },
+          "toolManagement": {
+            "toolsInUse": [
+              {
+                "toolId": "T2",
+                "toolName": "Lathe",
+                "usageTime": 100,
+                "lastMaintenance": "2024-10-01",
+                "condition": "Good",
+                "productivity": {
+                  "totalOperations": 300,
+                  "successfulOperations": 270,
+                  "efficiency": 90
+                }
+              }
+            ],
+            "totalTools": 4,
+            "toolsAvailable": 2
+          },
+          "materialManagement": {
+            "rawMaterial": {
+              "input": 600,
+              "output": 450
+            },
+            "waste": {
+              "scrap": 80,
+              "defect": 15,
+              "recycled": 25
+            }
+          },
+          "productionTargets": {
+            "targetProduction": 200,
+            "actualProduction": 180,
+            "overallProductivity": 90
+          },
+          "inventoryAnalysis": {
+            "rawMaterials": [
+              {
+                "materialId": "RM3",
+                "materialName": "Aluminum",
+                "currentStock": 250,
+                "minimumRequired": 200
+              },
+              {
+                "materialId": "RM4",
+                "materialName": "Copper",
+                "currentStock": 100,
+                "minimumRequired": 80
+              }
+            ],
+            "finishedGoods": [
+              {
+                "productId": "FG3",
+                "productName": "Product C",
+                "currentStock": 70,
+                "minimumRequired": 50
+              },
+              {
+                "productId": "FG4",
+                "productName": "Product D",
+                "currentStock": 30,
+                "minimumRequired": 20
+              }
+            ]
+          },
+          "resourceAllocation": {
+            "manpower": [
+              {
+                "workerId": "W3",
+                "workerName": "Mark Lee",
+                "role": "Operator",
+                "allocatedHours": 10,
+                "workedHours" : 10,
+                "leave" : 0,
+                "currentShift": "Morning",
+                "allocation" : "Not Allocated"
+              },
+              {
+                "workerId": "W4",
+                "workerName": "Anna Kim",
+                "role": "Technician",
+                "allocatedHours": 10,
+                "workedHours" : 10,
+                "leave" : 0,
+                "currentShift": "Evening",
+                "allocation" : "Allocated"
+              }
+            ],
+            "equipment": [
+              {
+                "equipmentId": "E3",
+                "equipmentName": "Crane",
+                "allocatedHours": 4,
+                "utilizationRate": 75
+              },
+              {
+                "equipmentId": "E4",
+                "equipmentName": "Welding Machine",
+                "allocatedHours": 6,
+                "utilizationRate": 80
+              }
+            ]
+          }
+        },
+        {
+          "date": "02/10/2024",
+          "availability": {
+            "actualRunTime": 390,
+            "plannedTime": 400,
+            "manpower": 8,
+            "uptime": 370,
+            "downtime": {
+              "totalDuration": 25,
+              "reasons": [
+                {
+                  "reason": "Equipment Failure",
+                  "duration": 15
+                },
+                {
+                  "reason": "Supply Chain Delay",
+                  "duration": 10
+                }
+              ]
+            }
+          },
+          "performance": {
+            "totalPieces": 190,
+            "target": 200
+          },
+          "quality": {
+            "goodPieces": 180,
+            "totalProduction": 190,
+            "rawMaterialUsed": 460
+          },
+          "powerUsage": {
+            "voltage": 220,
+            "current": 12,
+            "powerConsumed": 2900,
+            "downtime": {
+              "totalDuration": 15,
+              "reasons": [
+                {
+                  "reason": "Power Outage",
+                  "duration": 15
+                }
+              ]
+            }
+          },
+          "toolManagement": {
+            "toolsInUse": [
+              {
+                "toolId": "T2",
+                "toolName": "Lathe",
+                "usageTime": 105,
+                "lastMaintenance": "2024-10-01",
+                "condition": "Good",
+                "productivity": {
+                  "totalOperations": 310,
+                  "successfulOperations": 290,
+                  "efficiency": 93
+                }
+              }
+            ],
+            "totalTools": 4,
+            "toolsAvailable": 2
+          },
+          "materialManagement": {
+            "rawMaterial": {
+              "input": 610,
+              "output": 460
+            },
+            "waste": {
+              "scrap": 75,
+              "defect": 10,
+              "recycled": 20
+            }
+          },
+          "productionTargets": {
+            "targetProduction": 200,
+            "actualProduction": 190,
+            "overallProductivity": 95
+          },
+          "inventoryAnalysis": {
+            "rawMaterials": [
+              {
+                "materialId": "RM3",
+                "materialName": "Aluminum",
+                "currentStock": 240,
+                "minimumRequired": 200
+              },
+              {
+                "materialId": "RM4",
+                "materialName": "Copper",
+                "currentStock": 90,
+                "minimumRequired": 80
+              }
+            ],
+            "finishedGoods": [
+              {
+                "productId": "FG3",
+                "productName": "Product C",
+                "currentStock": 75,
+                "minimumRequired": 50
+              },
+              {
+                "productId": "FG4",
+                "productName": "Product D",
+                "currentStock": 35,
+                "minimumRequired": 20
+              }
+            ]
+          },
+          "resourceAllocation": {
+            "manpower": [
+              {
+                "workerId": "W3",
+                "workerName": "Mark Lee",
+                "role": "Operator",
+                "allocatedHours": 10,
+                "workedHours" : 10,
+                "leave" : 0,
+                "currentShift": "Morning",
+                "allocation":"Allocated"
+              },
+              {
+                "workerId": "W4",
+                "workerName": "Anna Kim",
+                "role": "Technician",
+                "allocatedHours": 10,
+                "workedHours" : 9,
+                "leave" : 1,
+                "currentShift": "Evening",
+                "allocation" : "Not Allocated"
+              }
+            ],
+            "equipment": [
+              {
+                "equipmentId": "E3",
+                "equipmentName": "Crane",
+                "allocatedHours": 5,
+                "utilizationRate": 80
+              },
+              {
+                "equipmentId": "E4",
+                "equipmentName": "Welding Machine",
+                "allocatedHours": 7,
+                "utilizationRate": 85
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "zoneName": "Zone C",
+      "machineId": "M5",
+      "monthlyData": [
+        {
+          "date": "01/10/2024",
+          "availability": {
+            "actualRunTime": 420,
+            "plannedTime": 430,
+            "manpower": 9,
+            "uptime": 400,
+            "downtime": {
+              "totalDuration": 30,
+              "reasons": [
+                {
+                  "reason": "Scheduled Maintenance",
+                  "duration": 20
+                },
+                {
+                  "reason": "Power Fluctuation",
+                  "duration": 10
+                }
+              ]
+            }
+          },
+          "performance": {
+            "totalPieces": 230,
+            "target": 240
+          },
+          "quality": {
+            "goodPieces": 220,
+            "totalProduction": 230,
+            "rawMaterialUsed": 600
+          },
+          "powerUsage": {
+            "voltage": 230,
+            "current": 10,
+            "powerConsumed": 3500,
+            "downtime": {
+              "totalDuration": 20,
+              "reasons": [
+                {
+                  "reason": "Power Fluctuation",
+                  "duration": 20
+                }
+              ]
+            }
+          },
+          "toolManagement": {
+            "toolsInUse": [
+              {
+                "toolId": "T3",
+                "toolName": "Milling Machine",
+                "usageTime": 150,
+                "lastMaintenance": "2024-10-03",
+                "condition": "Good",
+                "productivity": {
+                  "totalOperations": 450,
+                  "successfulOperations": 425,
+                  "efficiency": 95
+                }
+              }
+            ],
+            "totalTools": 6,
+            "toolsAvailable": 4
+          },
+          "materialManagement": {
+            "rawMaterial": {
+              "input": 800,
+              "output": 600
+            },
+            "waste": {
+              "scrap": 110,
+              "defect": 15,
+              "recycled": 25
+            }
+          },
+          "productionTargets": {
+            "targetProduction": 240,
+            "actualProduction": 230,
+            "overallProductivity": 96
+          },
+          "inventoryAnalysis": {
+            "rawMaterials": [
+              {
+                "materialId": "RM5",
+                "materialName": "Iron",
+                "currentStock": 400,
+                "minimumRequired": 300
+              },
+              {
+                "materialId": "RM6",
+                "materialName": "Rubber",
+                "currentStock": 200,
+                "minimumRequired": 150
+              }
+            ],
+            "finishedGoods": [
+              {
+                "productId": "FG5",
+                "productName": "Product E",
+                "currentStock": 60,
+                "minimumRequired": 50
+              },
+              {
+                "productId": "FG6",
+                "productName": "Product F",
+                "currentStock": 50,
+                "minimumRequired": 30
+              }
+            ]
+          },
+          "resourceAllocation": {
+            "manpower": [
+              {
+                "workerId": "W5",
+                "workerName": "Alice Brown",
+                "role": "Operator",
+                "allocatedHours": 10,
+                "workedHours" : 10,
+                "leave" : 0,
+                "currentShift": "Morning",
+                "allocation" : "Allocated"
+              },
+              {
+                "workerId": "W6",
+                "workerName": "Bob White",
+                "role": "Technician",
+                "allocatedHours": 10,
+                "workedHours" : 10,
+                "leave" : 0,
+                "currentShift": "Evening",
+                "allocation":"Allocated"
+              }
+            ],
+            "equipment": [
+              {
+                "equipmentId": "E5",
+                "equipmentName": "Hydraulic Press",
+                "allocatedHours": 3,
+                "utilizationRate": 70
+              },
+              {
+                "equipmentId": "E6",
+                "equipmentName": "Laser Cutter",
+                "allocatedHours": 4,
+                "utilizationRate": 80
+              }
+            ]
+          }
+        },
+        {
+          "date": "02/10/2024",
+          "availability": {
+            "actualRunTime": 430,
+            "plannedTime": 430,
+            "manpower": 9,
+            "uptime": 410,
+            "downtime": {
+              "totalDuration": 25,
+              "reasons": [
+                {
+                  "reason": "Scheduled Maintenance",
+                  "duration": 15
+                },
+                {
+                  "reason": "Power Fluctuation",
+                  "duration": 10
+                }
+              ]
+            }
+          },
+          "performance": {
+            "totalPieces": 240,
+            "target": 240
+          },
+          "quality": {
+            "goodPieces": 230,
+            "totalProduction": 240,
+            "rawMaterialUsed": 610
+          },
+          "powerUsage": {
+            "voltage": 230,
+            "current": 10,
+            "powerConsumed": 3600,
+            "downtime": {
+              "totalDuration": 20,
+              "reasons": [
+                {
+                  "reason": "Power Fluctuation",
+                  "duration": 20
+                }
+              ]
+            }
+          },
+          "toolManagement": {
+            "toolsInUse": [
+              {
+                "toolId": "T3",
+                "toolName": "Milling Machine",
+                "usageTime": 155,
+                "lastMaintenance": "2024-10-03",
+                "condition": "Good",
+                "productivity": {
+                  "totalOperations": 460,
+                  "successfulOperations": 440,
+                  "efficiency": 96
+                }
+              }
+            ],
+            "totalTools": 6,
+            "toolsAvailable": 4
+          },
+          "materialManagement": {
+            "rawMaterial": {
+              "input": 810,
+              "output": 610
+            },
+            "waste": {
+              "scrap": 100,
+              "defect": 12,
+              "recycled": 28
+            }
+          },
+          "productionTargets": {
+            "targetProduction": 240,
+            "actualProduction": 240,
+            "overallProductivity": 100
+          },
+          "inventoryAnalysis": {
+            "rawMaterials": [
+              {
+                "materialId": "RM5",
+                "materialName": "Iron",
+                "currentStock": 390,
+                "minimumRequired": 300
+              },
+              {
+                "materialId": "RM6",
+                "materialName": "Rubber",
+                "currentStock": 190,
+                "minimumRequired": 150
+              }
+            ],
+            "finishedGoods": [
+              {
+                "productId": "FG5",
+                "productName": "Product E",
+                "currentStock": 65,
+                "minimumRequired": 50
+              },
+              {
+                "productId": "FG6",
+                "productName": "Product F",
+                "currentStock": 55,
+                "minimumRequired": 30
+              }
+            ]
+          },
+          "resourceAllocation": {
+            "manpower": [
+              {
+                "workerId": "W5",
+                "workerName": "Alice Brown",
+                "role": "Operator",
+                "allocatedHours": 10,
+                "workedHours" : 8,
+                "leave" : 2,
+                "currentShift": "Morning",
+                "allocation":"Allocated"
+              },
+              {
+                "workerId": "W6",
+                "workerName": "Bob White",
+                "role": "Technician",
+                "allocatedHours": 10,
+                "workedHours" : 10,
+                "leave" : 0,
+                "currentShift": "Evening",
+                "allocation" : "Allocated"
+              }
+            ],
+            "equipment": [
+              {
+                "equipmentId": "E5",
+                "equipmentName": "Hydraulic Press",
+                "allocatedHours": 4,
+                "utilizationRate": 75
+              },
+              {
+                "equipmentId": "E6",
+                "equipmentName": "Laser Cutter",
+                "allocatedHours": 5,
+                "utilizationRate": 80
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const importMachinesController = require('../controllers/sql_data.controller.js');
+const {importMachines} = require('../controllers/sql_data.controller.js');
 
 // Route to import machines from JSON
-router.post('/import-machines', importMachinesController.importMachines);
+router.post('/import-machines', importMachines);
 
 module.exports = router;
