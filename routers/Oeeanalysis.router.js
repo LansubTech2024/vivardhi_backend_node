@@ -3,7 +3,11 @@ const express = require('express');
 const router = express.Router();
 const { calculateOEE } = require('../controllers/Oeeanalysis.controller');
 
-router.get('/oeeanalysis', calculateOEE);
+
+router.get('/oeemachine', calculateOEE);
+
+// Route to get details of a specific machine
+
 
 module.exports = router;
 
