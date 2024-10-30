@@ -1,29 +1,36 @@
-// controllers/deviceController.js
-const Device = require('../models/Oeeanalysis.model');
+const Device = require('../models/Oeeanalysis.model'); // Ensure correct path
 
-const calculateOEE = async (req, res) => {
-  try {
-    const devices = await Device.findAll();
+exports.calculateOEE = async (req, res) => {
+    try {
+        // Fetch device data
+        const devices = await Device.findAll();
+        
+        if (!devices || devices.length === 0) {
+            console.log("No device data found.");
+            return res.status(404).json({ message: "No devices found for OEE calculation." });
+        }
 
-    const results = devices.map(device => {
-      const availability = device.uptime / device.plannedTime;
-      const performance = (device.totalPieces / device.target) * (device.uptime / device.actualRunTime);
-      const quality = device.goodPieces / device.totalProduction;
+        // Proceed with OEE calculations here
+        const calculations = devices.map(device => {
+            const availability = (device.actualRunTime / device.plannedTime) * 100;
+            const performance = (device.totalPieces / device.target) * 100;
+            const quality = (device.goodPieces / device.totalProduction) * 100;
+            const oee = (availability * performance * quality) / 10000; // Divide by 10000 to get a percentage
 
-      return {
-        machineId: device.machineId,
-        machineName: device.machineId, // Assuming machine name is same as machineId, update if needed
-        oee: availability * performance * quality,
-        availability: availability * 100, // Percentage
-        performance: performance * 100, // Percentage
-        quality: quality * 100 // Percentage
-      };
-    });
+            return {
+                machineId: device.machineId,
+                availability,
+                performance,
+                quality,
+                oee,
+            };
+        });
 
-    return res.json(results);
-  } catch (error) {
-    return res.status(500).json({ error: 'An error occurred while fetching device data.' });
-  }
+        console.log("OEE calculations successful:", calculations);
+        res.json(calculations);
+
+    } catch (error) {
+        console.error("Error calculating OEE:", error.message || error);
+        res.status(500).json({ message: "Failed to calculate OEE", error: error.message || error });
+    }
 };
-
-module.exports = { calculateOEE };

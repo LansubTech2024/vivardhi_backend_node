@@ -1,12 +1,22 @@
-// controllers/oeeController.js
-const Device = require('../models/Device');
+/// controllers/metrics.controller.js
+const Device = require('../models/Productionmetrics.model');
 
-// Calculate Availability, Performance, Quality, and Yield
-const calculateMetrics = (deviceData) => {
-    const availability = (deviceData.actualRunTime / deviceData.plannedTime) * 100;
-    const performance = (deviceData.totalPieces / deviceData.target) * 100;
-    const quality = (deviceData.goodPieces / deviceData.totalProduction) * 100;
-    const yieldValue = (deviceData.goodPieces / deviceData.rawMaterialUsed) * 100;
+// Calculate Availability, Performance, Quality, and Yield for all devices combined
+const calculateMetrics = (devicesData) => {
+    // Aggregate data across all devices
+    const totalActualRunTime = devicesData.reduce((sum, device) => sum + device.actualRunTime, 0);
+    const totalPlannedTime = devicesData.reduce((sum, device) => sum + device.plannedTime, 0);
+    const totalPieces = devicesData.reduce((sum, device) => sum + device.totalPieces, 0);
+    const totalTarget = devicesData.reduce((sum, device) => sum + device.target, 0);
+    const totalGoodPieces = devicesData.reduce((sum, device) => sum + device.goodPieces, 0);
+    const totalProduction = devicesData.reduce((sum, device) => sum + device.totalProduction, 0);
+    const totalRawMaterialUsed = devicesData.reduce((sum, device) => sum + device.rawMaterialUsed, 0);
+
+    // Calculate metrics
+    const availability = (totalActualRunTime / totalPlannedTime) * 100;
+    const performance = (totalPieces / totalTarget) * 100;
+    const quality = (totalGoodPieces / totalProduction) * 100;
+    const yieldValue = (totalGoodPieces / totalRawMaterialUsed) * 100;
 
     const oee = (availability * performance * quality) / 10000; // OEE as a percentage
 
@@ -15,58 +25,83 @@ const calculateMetrics = (deviceData) => {
 
 exports.getOEEData = async (req, res) => {
     try {
-        const deviceData = await Device.findAll();
+        const devicesData = await Device.findAll();
         
-        // Map through each device to calculate OEE metrics
-        const metrics = deviceData.map(device => {
-            const { availability, performance, quality, yield: yieldValue, oee } = calculateMetrics(device);
-            return { deviceId: device.id, availability, performance, quality, yield: yieldValue, oee };
-        });
+        // Calculate combined OEE metrics for all devices
+        const { availability, performance, quality, yield: yieldValue, oee } = calculateMetrics(devicesData);
 
-        res.status(200).json({ metrics });
+        res.status(200).json({ availability, performance, quality, yield: yieldValue, oee });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
-// Get all production metrics
-exports.getProductionMetrics = async (req, res) => {
-    try {
-        const data = await ProductionData.findOne({
-            attributes: [
-                'totalProduction', 
-                'targetProduction', 
-                'actualProduction', 
-                'scrap', 
-                'defect', 
-                'manpowerAllocation', 
-                'rawMaterialReceived', 
-                'finishedProduction'
-            ]
-        });
 
-        if (!data) {
-            return res.status(404).json({ message: 'No data found' });
-        }
+// Gauge chart for Total Production
+exports.getTotalProduction = async (req, res) => {
+  try {
+    const totalProduction = await Device.sum('totalProduction');
+    res.json({ totalProduction });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching total production', error });
+  }
+};
 
-        const { totalProduction, targetProduction, actualProduction } = data;
-        const achievedPercentage = targetProduction > 0 ? (actualProduction / targetProduction) * 100 : 0;
+// Gauge chart for Target Production
+exports.getTargetProduction = async (req, res) => {
+  try {
+    const targetProduction = await Device.sum('target');
+    res.json({ targetProduction });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching target production', error });
+  }
+};
 
-        res.json({
-            productionData: {
-                totalProduction,
-                targetProduction,
-                achievedPercentage: achievedPercentage.toFixed(1),
-            },
-            scrapData: data.scrap,
-            defectData: data.defect,
-            manpowerData: data.manpowerAllocation,
-            inventoryData: {
-                rawMaterialReceived: data.rawMaterialReceived,
-                finishedProduction: data.finishedProduction
-            }
-        });
-    } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-        res.status(500).json({ message: 'Server error' });
-    }
+// Gauge chart for Achieved Target (as a percentage of target)
+exports.getAchievedTarget = async (req, res) => {
+  try {
+    const totalProduction = await Device.sum('totalProduction');
+    const targetProduction = await Device.sum('target');
+    const achievedTarget = ((totalProduction / targetProduction) * 100).toFixed(2);
+    res.json({ achievedTarget: Math.min(achievedTarget, 100) });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching achieved target', error });
+  }
+};
+
+// Bar chart for Manpower Allocation by Zone
+exports.getManpowerAllocation = async (req, res) => {
+  try {
+    const manpowerAllocation = await Device.findAll({
+      attributes: ['zoneName', 'manpower'],
+    });
+    res.json(manpowerAllocation);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching manpower allocation', error });
+  }
+};
+
+// Line chart for Raw Material Inventory over time
+exports.getRawMaterialInventory = async (req, res) => {
+  try {
+    const inventory = await Device.findAll({
+      attributes: ['date', 'rawMaterialInput', 'rawMaterialOutput'],
+    });
+    const inventoryData = inventory.map(record => ({
+      date: record.date,
+      inventory: record.rawMaterialInput - record.rawMaterialOutput,
+    }));
+    res.json(inventoryData);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching raw material inventory', error });
+  }
+};
+
+// Bar chart for Finished Material (Output)
+exports.getFinishedMaterial = async (req, res) => {
+  try {
+    const finishedMaterial = await Device.sum('rawMaterialOutput');
+    res.json({ finishedMaterial });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching finished material', error });
+  }
 };
