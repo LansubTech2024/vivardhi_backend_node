@@ -7,6 +7,9 @@ const resource =require("./Resource.router");
 const powerRouter = require("./powerUsage.router");
 const inventoryRouter = require("./inventory.router");
 const dashboardRouter = require("./dashboard.router");
+const oee=require("./Oee.router");
+const Productionmetrics=require("./Productionmetrics.router")
+const oeeanalysis=require("./Oeeanalysis.router")
 
 const router = express.Router();
 
@@ -18,6 +21,9 @@ router.use("/api",resource);
 router.use("/api" , powerRouter);
 router.use("/api", inventoryRouter);
 router.use("/api" , dashboardRouter);
+router.use('/api',oee);
+router.use("/api",Productionmetrics);
+router.use("/api",oeeanalysis)
 
 
 module.exports = router;
