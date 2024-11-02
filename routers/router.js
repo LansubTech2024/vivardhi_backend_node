@@ -4,6 +4,9 @@ const sql_dataRouter = require("./sql_data.router");
 const graphRouter = require("./Graph.router");
 const detailedRouter = require("./detailed_graph.router");
 const resource =require("./Resource.router");
+const powerRouter = require("./powerUsage.router");
+const inventoryRouter = require("./inventory.router");
+const dashboardRouter = require("./dashboard.router");
 
 const router = express.Router();
 
@@ -12,6 +15,9 @@ router.use("/api", sql_dataRouter);
 router.use("/api", graphRouter );
 router.use("/api/graphs", detailedRouter);
 router.use("/api",resource);
+router.use("/api" , powerRouter);
+router.use("/api", inventoryRouter);
+router.use("/api" , dashboardRouter);
 
 
 module.exports = router;
