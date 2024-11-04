@@ -1,4 +1,4 @@
-// controllers/OeeAnalysis.controller.js
+
 const Device = require('../models/Oeeanalysis.model');
 
 exports.calculateOEE = async (req, res) => {
