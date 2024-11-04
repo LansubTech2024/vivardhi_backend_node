@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const deviceController = require('../controllers/Production.controler');
+const productivityController = require('../controllers/Production.controler');
 
-router.get('/productive-analysis', deviceController.getProductiveAnalysisData);
+router.get('/productivity', productivityController.getProductiveAnalysisData);
 
 module.exports = router;
