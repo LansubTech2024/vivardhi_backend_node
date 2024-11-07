@@ -1,4 +1,4 @@
-// models/Inventory.js
+
 const { DataTypes } = require('sequelize');
 const sequelize = require('../DB_connection/db_connection.js'); // Assuming you have a configured database instance
 
@@ -35,9 +35,11 @@ const Inventory = sequelize.define('Inventory', {
     type: DataTypes.INTEGER,
     allowNull: true,
   },
-}, {
-  tableName: 'factory_data',
+},
+{
+  tableName: 'machines',
   timestamps: false,
-});
+}
+);
 
 module.exports = Inventory;

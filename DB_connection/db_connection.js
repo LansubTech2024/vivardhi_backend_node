@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize');
 
 
 
-const sequelize = new Sequelize('erp', 'root', 'Lansub@2024', {
+const sequelize = new Sequelize('opfact', 'root', 'Lansub@2024', {
     host: 'localhost',
     dialect: 'mysql',
 });

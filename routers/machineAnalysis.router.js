@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getMachines } = require('../controllers/machineAnalysis.controller');
+const machineController = require('../controllers/machineAnalysis.controller');
 
 
-router.get('/detailed-machine', getMachines);
+router.get("/machines/averages", machineController.getAverageMachineData);
+router.get("/machines/:id", machineController.getMachineDetails);
 
 module.exports = router;

@@ -9,12 +9,14 @@ dotenv.config()
 const SignUp = async (req, res) => {
   try {
     const {
-      name,
+      companyname,
+      username,
       email,
       password,
     } = req.body;
     if (
-      !name||
+      !companyname||
+      !username||
       !email ||
       !password
     ) {
@@ -31,7 +33,8 @@ const SignUp = async (req, res) => {
     }
     const hashedPassword = await auth.hashPassword(password);
     const newUser = new userModel({
-      name,
+      companyname,
+      username,
       email,
       password: hashedPassword,
     });
