@@ -75,9 +75,11 @@ const Device = sequelize.define('Device', {
         allowNull: true,
     },
     // Add more fields as needed based on your requirements
-}, {
-    tableName: 'factory_data',
+},
+ {
+    tableName: 'machines',
     timestamps: false,
-});
+}
+);
 
 module.exports = Device;

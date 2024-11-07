@@ -42,9 +42,12 @@ exports.importMachines = async (req, res) => {
                     100
                 )
               : null,
+          productionRate:monthlyData.performance?.productionRate || null,
           goodPieces: monthlyData.quality?.goodPieces || null,
           totalProduction: monthlyData.quality?.totalProduction || null,
           rawMaterialUsed: monthlyData.quality?.rawMaterialUsed || null,
+          scrapRate:monthlyData.quality?.scrapRate || null,
+          partRejectionRate:monthlyData.quality?.partRejectionRate || null,
           defectRate:
             monthlyData.quality?.totalProduction &&
             monthlyData.quality?.goodPieces
@@ -61,6 +64,7 @@ exports.importMachines = async (req, res) => {
           totalPowerDowntimeDuration:
             monthlyData.powerUsage?.downtime?.totalDuration || null,
           powerDowntimeReasons: monthlyData.powerUsage?.downtime?.reasons?.[0]?.reason || null,
+          energyConsumption:monthlyData.powerUsage?.energyConsumption || null,
           rawMaterialInput:
             monthlyData.materialManagement?.rawMaterial?.input || null,
           rawMaterialOutput:
@@ -114,16 +118,26 @@ exports.importMachines = async (req, res) => {
           allocation:
             monthlyData.resourceAllocation?.manpower?.[0]?.allocation || null,
           equipmentId:
-            monthlyData.resourceAllocation?.equipment?.[0]?.equipmentId || null,
+            monthlyData.resourceAllocation?.equipment?.equipmentId || null,
           equipmentName:
-            monthlyData.resourceAllocation?.equipment?.[0]?.equipmentName ||
+            monthlyData.resourceAllocation?.equipment?.equipmentName ||
             null,
           equipmentAllocatedHours:
-            monthlyData.resourceAllocation?.equipment?.[0]?.allocatedHours ||
+            monthlyData.resourceAllocation?.equipment?.allocatedHours ||
             null,
           utilizationRate:
-            monthlyData.resourceAllocation?.equipment?.[0]?.utilizationRate ||
+            monthlyData.resourceAllocation?.equipment?.utilizationRate ||
             null,
+          spindleSpeed:monthlyData.resourceAllocation?.equipment?.spindleSpeed || null,
+          feedRate:monthlyData.resourceAllocation?.equipment?.feedRate || null,
+          cycleTime:monthlyData.resourceAllocation?.equipment?.cycleTime || null,
+          machineUtilization:monthlyData.resourceAllocation?.equipment?.machineUtilization || null,
+          temperature:monthlyData.resourceAllocation?.equipment?.temperature || null,
+          downtime:monthlyData.resourceAllocation?.equipment?.downtime || null,
+          chuckPressure:monthlyData.resourceAllocation?.equipment?.chuckPressure || null,
+          surfaceFinishQuality:monthlyData.resourceAllocation?.equipment?.surfaceFinishQuality || null,
+          cutDepth:monthlyData.resourceAllocation?.equipment?.cutDepth || null,
+          materialRemovalRate:monthlyData.resourceAllocation?.equipment?.materialRemovalRate || null,
 
           // Production rate fields
           targetProduction:
@@ -144,6 +158,8 @@ exports.importMachines = async (req, res) => {
           toolInUseTotalOperation:monthlyData.toolManagement?.toolsInUse?.[0]?.productivity?.totalOperations || null,
           toolInUseSuccessOperation:monthlyData.toolManagement?.toolsInUse?.[0]?.productivity?.successfulOperations || null,
           toolInUseEfficiency:monthlyData.toolManagement?.toolsInUse?.[0]?.productivity?.efficiency || null,
+          toolLife:monthlyData.toolManagement?.toolsInUse?.[0]?.toolLife || 0,
+          toolWear:monthlyData.toolManagement?.toolsInUse?.[0]?.toolWear || 0,
           totalTools: monthlyData.toolManagement?.totalTools || null,
           toolsAvailable: monthlyData.toolManagement?.toolsAvailable || null,
         };

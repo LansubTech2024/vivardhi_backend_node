@@ -17,6 +17,7 @@ exports.calculateOEE = async (req, res) => {
             const downtime = device.totalDowntimeDuration;
             const wasteScrap = device.wasteScrap;
             const wasteDefect = device.wasteDefect;
+            const target = device.target;
             const machineStatus = device.uptime > 0 ? "ON" : "OFF"; // Checking if the machine is currently running
 
             return {
@@ -29,6 +30,7 @@ exports.calculateOEE = async (req, res) => {
                 uptime,
                 downtime,
                 machineStatus,
+                target,
                 productionDetails: {
                     totalPieces: device.totalPieces,
                     goodPieces: device.goodPieces,

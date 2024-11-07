@@ -245,7 +245,7 @@ const ProductionData = sequelize.define('ProductionData', {
         allowNull: true,
       },
 },{
-    tableName: 'factory_data', 
+    tableName: 'machines', 
     timestamps: false,
   });
 

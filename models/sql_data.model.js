@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../DB_connection/db_connection'); // Ensure this path is correct
 
-const Device = sequelize.define('Device', {
+const Machine = sequelize.define('Machine', {
     zoneName: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -46,6 +46,10 @@ const Device = sequelize.define('Device', {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      productionRate: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
       efficiency: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -63,6 +67,14 @@ const Device = sequelize.define('Device', {
         allowNull: true,
       },
       defectRate: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      scrapRate: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      partRejectionRate: {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
@@ -84,6 +96,10 @@ const Device = sequelize.define('Device', {
       },
       powerDowntimeReasons: {
         type: DataTypes.STRING,
+        allowNull: true,
+      },
+      energyConsumption: {
+        type: DataTypes.FLOAT,
         allowNull: true,
       },
       rawMaterialInput: {
@@ -192,6 +208,46 @@ const Device = sequelize.define('Device', {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      spindleSpeed: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      feedRate: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+      },
+      cycleTime: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      machineUtilization: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      temperature: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      chuckPressure: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      downtime: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      cutDepth: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      materialRemovalRate: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+      },
+      surfaceFinishQuality: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+      },
     
       // Production rate fields
       targetProduction: {
@@ -236,6 +292,14 @@ const Device = sequelize.define('Device', {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      toolLife: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      toolWear: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
       totalTools: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -244,11 +308,6 @@ const Device = sequelize.define('Device', {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-    }, {
-  sequelize,
-  modelName: 'Device',
-  tableName: 'factory_data', // Change to your desired table name
-  timestamps: false, // If you want to manage createdAt and updatedAt, set this to true
-});
+    });
 
-module.exports = Device;
+module.exports = Machine;

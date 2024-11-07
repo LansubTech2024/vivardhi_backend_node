@@ -9,8 +9,9 @@ const PowerUsage = sequelize.define('PowerUsage', {
   totalPowerDowntimeDuration: { type: DataTypes.INTEGER, allowNull: true }, 
 },
 {
-    tableName: 'factory_data', // Set the actual table name in your database
+    tableName: 'machines', 
     timestamps: false,
-  });
+  }
+);
 
 module.exports = PowerUsage;
