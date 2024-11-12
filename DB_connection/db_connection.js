@@ -1,10 +1,18 @@
 
 const { Sequelize } = require('sequelize');
+const fs=require('fs');
 
 
-const sequelize = new Sequelize('opfact', 'root', 'Lansub@2024', {
-    host: 'localhost',
+const sequelize = new Sequelize('opfact', 'myadminuser', 'Keerthi@05', {
+    host: 'backendserver.mysql.database.azure.com',
     dialect: 'mysql',
+    port: 3306,                                         // Default MySQL port
+    dialectOptions: {
+      ssl: {
+        rejectUnauthorized: false // Path to SSL certificate
+      }
+    },
+    logging: false,
 });
 
 async function testConnection() {
