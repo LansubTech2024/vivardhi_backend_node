@@ -151,7 +151,7 @@ const ForgotPassword = async (req, res) => {
 
       console.log(expirationTimestamp);
 
-      const resetLink = `${process.env.FRONTEND_URL}/resetpassword/${randomString}/${expirationTimestamp}`;
+      const resetLink = `https://samplefrontendserver-ajeta9hdc3h5hpdg.southeastasia-01.azurewebsites.net/resetpassword/${randomString}/${expirationTimestamp}`;
 
       const transporter = nodemailer.createTransport({
         service: "gmail",
