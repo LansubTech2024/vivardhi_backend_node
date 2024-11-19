@@ -12,10 +12,10 @@ const PowerUsage = sequelize.define('PowerUsage', {
     allowNull: true,
   }, 
 },
-{
-    tableName: 'machines', 
-    timestamps: false,
-  }
+ {
+     tableName: 'machines', 
+     timestamps: false,
+   }
 );
 
 module.exports = PowerUsage;

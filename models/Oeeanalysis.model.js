@@ -78,8 +78,8 @@ const Device = sequelize.define('Device', {
 },
  {
     tableName: 'machines',
-    timestamps: false,
-}
+   timestamps: false,
+ }
 );
 
 module.exports = Device;

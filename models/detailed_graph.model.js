@@ -28,12 +28,12 @@ const DetailedGraphModel = sequelize.define('DetailedGraphModel', {
         field: 'device_date'
       }
 }, 
-// {
-//     tableName: 'devices', 
+{
+     tableName: 'devices', 
 
-//     timestamps: true
+    timestamps: true
 
-// }
+}
 );
 
 module.exports = DetailedGraphModel;

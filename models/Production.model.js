@@ -17,7 +17,7 @@ const ProductionData = sequelize.define('ProductionData', {
 {
     tableName: 'machines', 
     timestamps: false,
-  }
+}
 );
 
 module.exports = ProductionData;

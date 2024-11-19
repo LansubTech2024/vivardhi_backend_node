@@ -18,11 +18,13 @@ const ResourceModel = sequelize.define('ResourceModel', {
         
     allocated: DataTypes.STRING(50),
         
-}, {
+}, 
+ {
     tableName: 'devices', // Use your actual table name
     timestamps: false // No timestamps since you're managing it manually
 
-});
+}
+);
 
 module.exports = ResourceModel;
 

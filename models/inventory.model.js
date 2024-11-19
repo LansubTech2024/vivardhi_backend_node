@@ -36,10 +36,10 @@ const Inventory = sequelize.define('Inventory', {
     allowNull: true,
   },
 },
-{
+ {
   tableName: 'machines',
   timestamps: false,
-}
+ }
 );
 
 module.exports = Inventory;
