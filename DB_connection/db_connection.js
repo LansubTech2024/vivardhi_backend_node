@@ -19,6 +19,8 @@ const sequelize = new Sequelize('opfact', 'root', 'Lansub@2024', {
   host: 'localhost',
   dialect: 'mysql',
 
+});
+
 async function testConnection() {
     try {
       await sequelize.authenticate();
