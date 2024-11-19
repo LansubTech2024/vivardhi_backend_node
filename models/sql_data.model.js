@@ -11,7 +11,7 @@ const Machine = sequelize.define('Machine', {
         allowNull: false,
       },
       date: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
       },
       actualRunTime: {

@@ -77,6 +77,10 @@ const MachineAnalysis = sequelize.define('MachineAnalysis', {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    energyConsumption: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
     
 
 },

@@ -94,7 +94,8 @@ const SignIn = async (req, res) => {
 const updateStudentProfile = async (req, res) => {
   try {
     const {
-      name,
+      companyname,
+      username,
       email,
       designation,
     } = req.body;
@@ -116,7 +117,8 @@ const updateStudentProfile = async (req, res) => {
     }
 
     //update student object
-      (matcheduser.name = name),
+      (matcheduser.companyname = companyname),
+      (matcheduser.username = username),
       (matcheduser.email = email),
       (matcheduser.designation = designation),
       //update the student in the database

@@ -2,24 +2,26 @@
 const Machine = require('../models/machineAnalysis.model');
 const sequelize = require("../DB_connection/db_connection");
 
-
-// Get average values for each machine
 exports.getAverageMachineData = async (req, res) => {
-    try {
-      const machines = await Machine.findAll({
-        attributes: [
-          "machineId",
-          [sequelize.fn("AVG", sequelize.col("productionRate")), "averageProductionRate"],
-          [sequelize.fn("AVG", sequelize.col("scrapRate")), "averageScrapRate"],
-          [sequelize.fn("AVG", sequelize.col("downtime")), "averageDowntime"]
-        ],
-        group: ["machineId"]
-      });
-      res.json(machines);
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching average data", error });
-    }
-  };
+  try {
+    // Fetch actual data for all machines
+    const machines = await Machine.findAll({
+      attributes: [
+        "machineId",
+        "productionRate",
+        "scrapRate",
+        "downtime",
+        "temperature",
+        "energyConsumption",
+      ],
+      order: [["createdAt", "ASC"]], 
+    });
+
+    res.json(machines);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching machine data", error });
+  }
+};
   
   // Get detailed data for a specific machine
   exports.getMachineDetails = async (req, res) => {

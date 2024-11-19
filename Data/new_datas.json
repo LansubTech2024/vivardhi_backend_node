@@ -5,7 +5,7 @@
       "machineId": "M1",
       "monthlyData": [
         {
-          "date": "01/10/2024",
+          "date": "2024-10-01",
           "availability": {
             "actualRunTime": 400,
             "plannedTime": 420,
@@ -154,7 +154,7 @@
           }
         },
         {
-          "date": "02/10/2024",
+          "date": "2024-10-02",
           "availability": {
             "actualRunTime": 410,
             "plannedTime": 420,
@@ -303,7 +303,7 @@
           }
         },
         {
-          "date": "03/10/2024",
+          "date": "2024-10-03",
           "availability": {
             "actualRunTime": 410,
             "plannedTime": 420,
@@ -452,7 +452,7 @@
           }
         },
         {
-          "date": "04/10/2024",
+          "date": "2024-10-04",
           "availability": {
             "actualRunTime": 410,
             "plannedTime": 420,
@@ -601,7 +601,7 @@
           }
         },
         {
-          "date": "05/10/2024",
+          "date": "2024-10-05",
           "availability": {
             "actualRunTime": 410,
             "plannedTime": 420,
@@ -750,7 +750,7 @@
           }
         },
         {
-          "date": "06/10/2024",
+          "date": "2024-10-06",
           "availability": {
             "actualRunTime": 410,
             "plannedTime": 420,
@@ -905,7 +905,7 @@
       "machineId": "M3",
       "monthlyData": [
         {
-          "date": "01/10/2024",
+          "date": "2024-10-01",
           "availability": {
             "actualRunTime": 380,
             "plannedTime": 400,
@@ -1056,7 +1056,7 @@
           }
         },
         {
-          "date": "02/10/2024",
+          "date": "2024-10-02",
           "availability": {
             "actualRunTime": 390,
             "plannedTime": 400,
@@ -1207,7 +1207,7 @@
           }
         },
         {
-          "date": "03/10/2024",
+          "date": "2024-10-03",
           "availability": {
             "actualRunTime": 390,
             "plannedTime": 400,
@@ -1358,7 +1358,7 @@
           }
         },
         {
-          "date": "04/10/2024",
+          "date": "2024-10-04",
           "availability": {
             "actualRunTime": 390,
             "plannedTime": 400,
@@ -1509,7 +1509,7 @@
           }
         },
         {
-          "date": "05/10/2024",
+          "date": "2024-10-05",
           "availability": {
             "actualRunTime": 390,
             "plannedTime": 400,
@@ -1660,7 +1660,7 @@
           }
         },
         {
-          "date": "06/10/2024",
+          "date": "2024-10-06",
           "availability": {
             "actualRunTime": 390,
             "plannedTime": 400,
@@ -1817,7 +1817,7 @@
       "machineId": "M5",
       "monthlyData": [
         {
-          "date": "01/10/2024",
+          "date": "2024-10-01",
           "availability": {
             "actualRunTime": 420,
             "plannedTime": 430,
@@ -1967,7 +1967,7 @@
           }
         },
         {
-          "date": "02/10/2024",
+          "date": "2024-10-02",
           "availability": {
             "actualRunTime": 430,
             "plannedTime": 430,
@@ -2117,7 +2117,7 @@
           }
         },
         {
-          "date": "03/10/2024",
+          "date": "2024-10-03",
           "availability": {
             "actualRunTime": 430,
             "plannedTime": 430,
@@ -2267,7 +2267,7 @@
           }
         },
         {
-          "date": "04/10/2024",
+          "date": "2024-10-04",
           "availability": {
             "actualRunTime": 430,
             "plannedTime": 430,
@@ -2417,7 +2417,7 @@
           }
         },
         {
-          "date": "05/10/2024",
+          "date": "2024-10-05",
           "availability": {
             "actualRunTime": 430,
             "plannedTime": 430,
@@ -2567,7 +2567,7 @@
           }
         },
         {
-          "date": "06/10/2024",
+          "date": "2024-10-06",
           "availability": {
             "actualRunTime": 430,
             "plannedTime": 430,

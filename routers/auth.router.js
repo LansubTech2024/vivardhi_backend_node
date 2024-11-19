@@ -11,6 +11,6 @@ router.post('/login', authController.SignIn);
 router.put('/updateprofile',authMiddleware,authController.updateStudentProfile);
 
 router.post('/forgot-password', authController.ForgotPassword);
-router.post('/reset-password/:randomString/:expirationTimestamp', authController.ResetPassword);
+router.put('/reset-password/:randomString/:expirationTimestamp', authController.ResetPassword);
 
 module.exports = router;

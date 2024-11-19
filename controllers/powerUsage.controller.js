@@ -1,10 +1,12 @@
 
 const PowerUsage = require('../models/powerUsage.model');
 const sequelize = require('../DB_connection/db_connection.js');
+const { Op } = require('sequelize');
 
-const POWER_USAGE_LIMIT = 280; // Set threshold for high power usage
+const POWER_USAGE_LIMIT = 280; 
 
 exports.getPowerUsageMetrics = async (req, res) => {
+  const { startDate, endDate } = req.query;
   try {
     const currentUsage = await PowerUsage.findOne({ order: [['date', 'DESC']] });
     const averagePower = await PowerUsage.findAll({
@@ -46,5 +48,38 @@ exports.getLivePowerUsage = async (req, res) => {
     } catch (error) {
       console.error('Error fetching live power usage:', error);
       res.status(500).json({ error: 'Failed to fetch live power usage' });
+    }
+  };
+
+  exports.getEnergyConsumption = async (req, res) => {
+    try {
+      const { startDate, endDate } = req.query;
+      
+      const whereClause = {};
+      if (startDate && endDate) {
+        whereClause.date = {
+          [Op.between]: [new Date(startDate), new Date(endDate)]
+        };
+      }
+  
+      const energyData = await PowerUsage.findAll({
+        where: whereClause,
+        attributes: [
+          [sequelize.fn('DATE', sequelize.col('date')), 'date'],
+          [sequelize.fn('SUM', sequelize.col('energyConsumption')), 'energyConsumption'],
+        ],
+        group: ['date'],
+        order: [[sequelize.fn('DATE', sequelize.col('date')), 'ASC']],
+      });
+  
+      const formattedData = energyData.map((entry) => ({
+        date: new Date(entry.date).toISOString().split('T')[0],
+        energyConsumption: Number(entry.energyConsumption).toFixed(2),
+      }));
+  
+      res.json(formattedData);
+    } catch (error) {
+      console.error('Error fetching energy consumption data:', error);
+      res.status(500).json({ error: 'Failed to fetch energy consumption data' });
     }
   };
