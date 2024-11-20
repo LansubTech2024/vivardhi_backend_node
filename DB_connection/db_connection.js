@@ -2,7 +2,6 @@
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 
-
 const sequelize = new Sequelize('opfact', 'myadminuser', 'Keerthi@05', {
     host: 'backendserver.mysql.database.azure.com',
     dialect: 'mysql',
@@ -11,14 +10,14 @@ const sequelize = new Sequelize('opfact', 'myadminuser', 'Keerthi@05', {
       ssl: {
         rejectUnauthorized: false
       }
-    },
+   },
     logging: false,
-});
 
-// const sequelize = new Sequelize('opfact', 'root', 'Lansub@2024', {
+ });
+
+// const sequelize = new Sequelize('opfact', 'root', 'sys@0805', {
 //   host: 'localhost',
 //   dialect: 'mysql',
-
 // });
 
 async function testConnection() {

@@ -9,14 +9,13 @@ const GraphModel = sequelize.define('GraphModel', {
     cow_out_temp: DataTypes.FLOAT,
     vaccum_pr: DataTypes.FLOAT,
     device_date: DataTypes.DATE,
-}
-// {
-//     tableName: 'devices', 
+}, {
+    tableName: 'devices', 
 
 
-//     timestamps: true
+    timestamps: true
 
-// }
+ }
 );
 
 module.exports = GraphModel;

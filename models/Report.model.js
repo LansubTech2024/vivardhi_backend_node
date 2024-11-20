@@ -66,12 +66,12 @@ const ProductionData = sequelize.define('ProductionData', {
   toolInUseEfficiency: { type: DataTypes.INTEGER },
   totalTools: { type: DataTypes.INTEGER },
   toolsAvailable: { type: DataTypes.INTEGER }
-}, {
-    tableName: 'factory_data', // Use your actual table name
+},
+  {
+   tableName: 'factory_data', 
 
-
-    timestamps: false
-
-});
+  timestamps: false
+ }
+);
 
 module.exports = ProductionData;

@@ -84,9 +84,9 @@ const MachineAnalysis = sequelize.define('MachineAnalysis', {
     
 
 },
-{
-    tableName: 'machines', 
-    timestamps: true,
+ {
+  tableName: 'machines', 
+  timestamps: true,
   }
 );
 
