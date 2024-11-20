@@ -3,23 +3,23 @@ const { Sequelize } = require('sequelize');
 const fs = require('fs');
 
 
-// const sequelize = new Sequelize('opfact', 'myadminuser', 'Keerthi@05', {
-//     host: 'backendserver.mysql.database.azure.com',
-//     dialect: 'mysql',
-//     port: 3306,                                         
-//     dialectOptions: {
-//       ssl: {
-//         rejectUnauthorized: false
-//       }
-//     },
-//     logging: false,
-// });
-
-const sequelize = new Sequelize('opfact', 'root', 'Lansub@2024', {
-  host: 'localhost',
-  dialect: 'mysql',
-
+const sequelize = new Sequelize('opfact', 'myadminuser', 'Keerthi@05', {
+    host: 'backendserver.mysql.database.azure.com',
+    dialect: 'mysql',
+    port: 3306,                                         
+    dialectOptions: {
+      ssl: {
+        rejectUnauthorized: false
+      }
+    },
+    logging: false,
 });
+
+// const sequelize = new Sequelize('opfact', 'root', 'Lansub@2024', {
+//   host: 'localhost',
+//   dialect: 'mysql',
+
+// });
 
 async function testConnection() {
     try {

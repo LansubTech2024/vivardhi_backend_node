@@ -212,6 +212,15 @@ const ResetPassword = async (req, res) => {
   try {
     const { randomString, expirationTimestamp } = req.params;
 
+    const { newPassword, confirmPassword } = req.body;
+
+    // Validate if passwords match
+    if (newPassword !== confirmPassword) {
+      return res.status(400).send({
+        message: "Passwords do not match",
+      });
+    }
+
     const user = await userModel.findOne({ randomString: randomString });
     if (!user || user.randomString !== randomString) {
       return res.status(400).send({
