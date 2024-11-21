@@ -15,7 +15,7 @@ const sequelize = new Sequelize('opfact', 'myadminuser', 'Keerthi@05', {
 
  });
 
-// const sequelize = new Sequelize('opfact', 'root', 'sys@0805', {
+// const sequelize = new Sequelize('opfact', 'root', 'Lansub@2024', {
 //   host: 'localhost',
 //   dialect: 'mysql',
 // });
