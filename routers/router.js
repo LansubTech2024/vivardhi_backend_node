@@ -11,7 +11,9 @@ const dashboardRouter = require("./dashboard.router");
 const productivityRouter = require("./Production.router");
 const oeeanalysis=require("./Oeeanalysis.router");
 const machineRouter = require("./machineAnalysis.router");
-const report=require("./Report.router")
+const report=require("./Report.router");
+const ChatBot = require("./chatBot.router");
+
 const router = express.Router();
 
 router.use("/api", authRouter);
@@ -26,6 +28,7 @@ router.use("/api",productivityRouter);
 router.use("/api",oeeanalysis);
 router.use("/api" , machineRouter);
 router.use("/api",report)
+router.use("/api/chat" , ChatBot);
 
 
 module.exports = router;

@@ -4,6 +4,7 @@ const sequelize = require('../DB_connection/db_connection.js');
 const { Op } = require('sequelize');
 
 const POWER_USAGE_LIMIT = 280; 
+const OVERHEAT_THRESHOLD = 250;
 
 exports.getPowerUsageMetrics = async (req, res) => {
   const { startDate, endDate } = req.query;
@@ -17,10 +18,17 @@ exports.getPowerUsageMetrics = async (req, res) => {
 
     // Check if the current power usage exceeds the limit
     const isOverLimit = currentUsage && currentUsage.powerConsumed > POWER_USAGE_LIMIT;
+    const isOverheatingRisk = currentUsage && currentUsage.powerConsumed > OVERHEAT_THRESHOLD;  // Overheating risk based on power usage
+
     const alertMessage = isOverLimit
       ? `Power usage is high at ${currentUsage.powerConsumed} kW!`
+      : isOverheatingRisk
+      ? `Warning: High power usage detected at ${currentUsage.powerConsumed} kW. The machine may overheat!`
       : null;
-    const suggestion = isOverLimit
+
+    const suggestion = isOverheatingRisk
+      ? "Recommendation: Shut down the machine for cooling to avoid downtime."
+      : isOverLimit
       ? "Consider reducing machine load or scheduling downtime during peak hours."
       : null;
 
