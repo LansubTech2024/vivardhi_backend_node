@@ -27,7 +27,7 @@ exports.getPowerUsageMetrics = async (req, res) => {
       : null;
 
     const suggestion = isOverheatingRisk
-      ? "Recommendation: Shut down the machine for cooling to avoid downtime."
+      ? "Shut down the machine for cooling to avoid downtime."
       : isOverLimit
       ? "Consider reducing machine load or scheduling downtime during peak hours."
       : null;
