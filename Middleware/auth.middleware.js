@@ -1,21 +1,25 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-// Authentication Middleware
 const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  console.log("Headers received:", req.headers); // Debugging
+
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ error: 'No token provided' });
+    return res.status(401).json({ error: "No token provided" });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
-      return res.status(403).json({ error: 'Token is invalid or expired' });
+      if (err.name === "TokenExpiredError") {
+        return res.status(403).json({ error: "Token expired. Please log in again." });
+      }
+      return res.status(403).json({ error: "Token is invalid." });
     }
 
-    req.user = user; // Store user info from the token
-    next(); // Proceed to next middleware
+    req.user = user;
+    next();
   });
 };
 

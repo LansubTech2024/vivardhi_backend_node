@@ -1,11 +1,20 @@
 const userModel = require("../models/auth.model");
-const dotenv = require("dotenv");
 const auth = require("../public/auth");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
+const dotenv = require("dotenv");
+dotenv.config();
 
-dotenv.config()
+// Configure Nodemailer
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_ID,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
 
+// SignUp Controller
 const SignUp = async (req, res) => {
   try {
     const {
@@ -52,93 +61,37 @@ const SignUp = async (req, res) => {
   }
 };
 
+// SignIn Controller
 const SignIn = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const User = await userModel.findOne({ where: { email: email } });
+
+    const User = await userModel.findOne({ where: { email } });
     if (!User) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      return res.status(404).json({ success: false, message: "User not found" });
     }
+
     const validPassword = await auth.hashCompare(password, User.password);
     if (!validPassword) {
-      return res.status(401).json({
-        message: "Invalid Password",
-      });
+      return res.status(401).json({ message: "Invalid Password" });
     }
+
     const token = await auth.createToken({
       id: User.id,
       name: User.name,
       email: User.email,
     });
+
     const userData = await userModel.findOne(
-      { where: { email: req.body.email } },
-      { attributes: { exclude: ['password'] } }
+      { where: { email }, attributes: { exclude: ["password"] } }
     );
-    res.status(201).json({
-      message: "Login successful",
-      token,
-      userData,
-    });
+
+    res.status(201).json({ message: "Login successful", token, userData });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-    });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
-
-const updateStudentProfile = async (req, res) => {
-  try {
-    const {
-      companyname,
-      username,
-      email,
-      designation,
-    } = req.body;
-
-    //find the student by email
-    const matcheduser = await userModel.findOne({ email });
-
-    //If student not found return error
-    if (!matcheduser) {
-      return res.status(400).json({
-        success: false,
-        message: "Please enter valid email",
-      });
-    }
-    //hash the password if provided
-    let hashedPassword = matcheduser.password;
-    if (password) {
-      hashedPassword = await auth.hashPassword(password);
-    }
-
-    //update student object
-      (matcheduser.companyname = companyname),
-      (matcheduser.username = username),
-      (matcheduser.email = email),
-      (matcheduser.designation = designation),
-      //update the student in the database
-      await userModel.findByIdAndUpdate(matcheduser._id, matcheduser);
-
-    //response with success message
-    res.status(201).json({
-      success: true,
-      message: "Account updated successfully",
-      matchedstudent,
-    });
-  } catch (err) {
-    //Handle errors
-    console.error(err);
-    res.status(400).json({
-      message: "Error on updating please try again later",
-    });
-  }
-};
-
 const ForgotPassword = async (req, res) => {
   try {
     const user = await userModel.findOne({ email: req.body.email });
@@ -163,7 +116,7 @@ const ForgotPassword = async (req, res) => {
       const mailOptions = {
         from: process.env.EMAIL_ID,
         to: user.email,
-        subject: "Password Reset",
+        subject: "Password Reset",  
         html: `
         <h3>Password Change Request</h3>
         <p>Click on the below link to reset your password</p>
@@ -250,10 +203,30 @@ const ResetPassword = async (req, res) => {
   }
 };
 
+
+// Update Profile Controller
+const UpdateProfile = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { companyname, username, email } = req.body;
+
+    const User = await userModel.findByPk(userId);
+    if (!User) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    await User.update({ companyname, username, email });
+    res.status(200).json({ message: "Profile updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   SignUp,
   SignIn,
-  updateStudentProfile,
   ForgotPassword,
   ResetPassword,
+  UpdateProfile,
 };
