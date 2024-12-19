@@ -104,7 +104,7 @@ const ForgotPassword = async (req, res) => {
 
       console.log(expirationTimestamp);
 
-      const resetLink = `${process.env.FRONTEND_URL}/resetpassword/${randomString}/${expirationTimestamp}`;
+      const resetLink = `https://samplefrontendserver-ajeta9hdc3h5hpdg.southeastasia-01.azurewebsites.net/resetpassword/${randomString}/${expirationTimestamp}`;
 
       const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -164,6 +164,15 @@ const ForgotPassword = async (req, res) => {
 const ResetPassword = async (req, res) => {
   try {
     const { randomString, expirationTimestamp } = req.params;
+
+    const { newPassword, confirmPassword } = req.body;
+
+    // Validate if passwords match
+    if (newPassword !== confirmPassword) {
+      return res.status(400).send({
+        message: "Passwords do not match",
+      });
+    }
 
     const user = await userModel.findOne({ randomString: randomString });
     if (!user || user.randomString !== randomString) {
@@ -228,5 +237,6 @@ module.exports = {
   SignIn,
   ForgotPassword,
   ResetPassword,
+
   UpdateProfile,
 };

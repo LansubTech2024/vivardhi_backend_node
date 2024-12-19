@@ -15,10 +15,10 @@ const fs = require('fs');
 
 //  });
 
+
 const sequelize = new Sequelize('opfact', 'root', 'sys@0805', {
   host: 'localhost',
   dialect: 'mysql',
-
 });
 
 async function testConnection() {
@@ -35,3 +35,26 @@ async function testConnection() {
 
 
 module.exports = sequelize;
+
+
+// const mongoose = require('mongoose');
+
+
+// const uri = 'mongodb://localhost:27017/mes_db'; 
+
+
+// async function connectToDatabase() {
+//   try {
+//     await mongoose.connect(uri, {
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//     });
+//     console.log('Database connection has been established successfully.');
+//   } catch (error) {
+//     console.error('Unable to connect to the database:', error);
+//   }
+// }
+
+// connectToDatabase();
+
+// module.exports = mongoose;

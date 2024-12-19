@@ -120,10 +120,13 @@ exports.getMetrics = async (req, res) => {
         defectRate: defectRate.toFixed(1),
         recycleRate: recycleRate.toFixed(1),
         manpowerUtilization: manpowerUtilization.toFixed(2),
+        totalManpower,
+        totalAllocatedHours,
         rawMaterialUsage: totalRawMaterialInput,
         rawMaterialEfficiency: rawMaterialEfficiency.toFixed(2),
         finishedGoodsStock: totalFinishedGoodStock,
         finishedGoodsRatio: finishedGoodsRatio.toFixed(2),
+        finishedGoodMinimumRequired
       };
     });
 

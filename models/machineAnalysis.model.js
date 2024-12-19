@@ -2,6 +2,10 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../DB_connection/db_connection.js');
 
 const MachineAnalysis = sequelize.define('MachineAnalysis', {
+  zoneName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
     machineId: { type: DataTypes.STRING, allowNull: false },
     powerConsumed: { type: DataTypes.INTEGER, allowNull: true },
     actualRunTime: { type: DataTypes.INTEGER, allowNull: true },

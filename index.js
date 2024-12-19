@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 require('dotenv').config();
 const bodyparser = require('body-parser')
+// const  connectToDatabase  = require('./DB_connection/db_connection');
 const  sequelize  = require('./DB_connection/db_connection');
 const PORT = process.env.PORT || 5000
 const Approuter = require('./routers/router')
@@ -20,9 +21,10 @@ app.use(Approuter);
 
 async function startServer() {
     try {
-      // Attempt to sync the database
-      await sequelize.sync({ force: false });
-      console.log('Database & tables created!');
+      // Connect to MongoDB
+      // await connectToDatabase();
+      await sequelize.sync({force: false});
+      console.log("Database & tables created!")
   
       app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
