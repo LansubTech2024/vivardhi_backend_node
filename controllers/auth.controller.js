@@ -2,6 +2,7 @@ const userModel = require("../models/auth.model");
 const auth = require("../public/auth");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
+const { generateQRCode } = require("../utils/qrGenerator");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -76,6 +77,14 @@ const SignIn = async (req, res) => {
       return res.status(401).json({ message: "Invalid Password" });
     }
 
+     // Generate QR code
+     const qrCode = await generateQRCode(User);
+    
+     // Update user with new QR code
+     await User.update({ qr_code: qrCode },{ where: { id: User.id }});
+
+     //const updatedUser = await User.findOne(User.id);
+
     const token = await auth.createToken({
       id: User.id,
       name: User.name,
@@ -86,6 +95,47 @@ const SignIn = async (req, res) => {
       { where: { email }, attributes: { exclude: ["password"] } }
     );
 
+    // Add token to userData
+    const userDataWithToken = {
+      ...userData.toJSON(),
+      token,
+    };
+
+    res.status(201).json({
+      message: "Login successful",
+      token,
+      userData: userDataWithToken,
+      qrCode : qrCode,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+const refreshQRCode = async (req, res) => {
+  try {
+    console.log(req.user); 
+    const userId = req.user.id; // Assuming you have user info in request from auth middleware
+    const User = await userModel.findOne({ where: { id: userId } });
+    
+    if (!User) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const qrCode = await generateQRCode(User);
+    await User.update({ qr_code: qrCode },{ where: { id: User.id }});
+
+    res.status(200).json({
+      success: true,
+      qrCode
+    });
     res.status(201).json({ message: "Login successful", token, userData });
   } catch (err) {
     console.error(err);
@@ -237,6 +287,7 @@ module.exports = {
   SignIn,
   ForgotPassword,
   ResetPassword,
-
+  refreshQRCode,
   UpdateProfile,
+
 };

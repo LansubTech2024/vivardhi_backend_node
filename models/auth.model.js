@@ -23,6 +23,10 @@ const AuthLogin = sequelize.define('AuthLogin', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  qr_code: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
   resetPasswordToken: {
     type: DataTypes.STRING,
     allowNull: true,
