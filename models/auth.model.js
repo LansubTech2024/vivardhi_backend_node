@@ -23,6 +23,10 @@ const Login = sequelize.define('Login', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  qr_code: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
   randomString: {
     type: DataTypes.STRING,
     allowNull: true
