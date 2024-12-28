@@ -27,6 +27,14 @@ const Login = sequelize.define('Login', {
     type: DataTypes.TEXT,
     allowNull: true
   },
+  resetPasswordToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  resetPasswordExpire: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
   randomString: {
     type: DataTypes.STRING,
     allowNull: true
