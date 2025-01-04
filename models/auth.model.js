@@ -2,7 +2,7 @@ const { DataTypes} = require('sequelize');
 const sequelize = require('../DB_connection/db_connection');
 const bcrypt = require('bcrypt');
 
-const Login = sequelize.define('Login', {
+const AuthLogin = sequelize.define('AuthLogin', {
   companyname: {
     type: DataTypes.STRING,
     allowNull: false
@@ -71,4 +71,4 @@ const assignWhatsAppGroup = async (companyId, groupLink) => {
 };
 
 
-module.exports = Login;
+module.exports = AuthLogin;
