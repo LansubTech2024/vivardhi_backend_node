@@ -27,14 +27,27 @@ const Login = sequelize.define('Login', {
     type: DataTypes.TEXT,
     allowNull: true
   },
-  resetPasswordToken: {
+  whatsapp_group_link: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  whatsapp_group_id: {
     type: DataTypes.STRING,
     allowNull: true,
+    unique: true
   },
-  resetPasswordExpire: {
-    type: DataTypes.DATE,
-    allowNull: true,
+  phonenumber: {
+    type: DataTypes.STRING,
+    allowNull: true
   },
+  // resetPasswordToken: {
+  //   type: DataTypes.STRING,
+  //   allowNull: true,
+  // },
+  // resetPasswordExpire: {
+  //   type: DataTypes.DATE,
+  //   allowNull: true,
+  // },
   randomString: {
     type: DataTypes.STRING,
     allowNull: true
@@ -48,6 +61,14 @@ const Login = sequelize.define('Login', {
     allowNull: false,
   },
 });
+
+// In your admin panel, store group links for each company
+const assignWhatsAppGroup = async (companyId, groupLink) => {
+  await Login.update(
+    { whatsapp_invite_link: groupLink },
+    { where: { id: companyId } }
+  );
+};
 
 
 module.exports = Login;

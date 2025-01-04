@@ -74,7 +74,7 @@ const Device = sequelize.define('Device', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-    // Add more fields as needed based on your requirements
+    
 },
  {
     tableName: 'machines',

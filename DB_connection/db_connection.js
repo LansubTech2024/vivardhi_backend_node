@@ -16,7 +16,7 @@ const fs = require('fs');
 //  });
 
 
-const sequelize = new Sequelize('opfact', 'root', 'sys@0805', {
+const sequelize = new Sequelize('opfact', 'root', 'Lansub@2024', {
   host: 'localhost',
   dialect: 'mysql',
 });

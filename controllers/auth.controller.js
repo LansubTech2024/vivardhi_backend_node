@@ -21,12 +21,14 @@ const SignUp = async (req, res) => {
     const {
       companyname,
       username,
+      phonenumber,
       email,
       password,
     } = req.body;
     if (
       !companyname||
       !username||
+      !phonenumber||
       !email ||
       !password
     ) {
@@ -45,6 +47,7 @@ const SignUp = async (req, res) => {
     const newUser = new userModel({
       companyname,
       username,
+      phonenumber,
       email,
       password: hashedPassword,
     });
@@ -78,10 +81,21 @@ const SignIn = async (req, res) => {
     }
 
      // Generate QR code
-     const qrCode = await generateQRCode(User);
+    //  const qrCode = await generateQRCode(User);
     
      // Update user with new QR code
-     await User.update({ qr_code: qrCode },{ where: { id: User.id }});
+    //  await User.update({ qr_code: qrCode },{ where: { id: User.id }});
+
+    // Generate QR code with WhatsApp integration
+    const { qrImage, whatsappLink } = await generateQRCode(User);
+    
+    // Update user with new QR code and WhatsApp link
+    await User.update({ 
+      qr_code: qrImage,
+      whatsapp_group_link: whatsappLink 
+    }, { 
+      where: { id: User.id }
+    });
 
      //const updatedUser = await User.findOne(User.id);
 
@@ -105,7 +119,8 @@ const SignIn = async (req, res) => {
       message: "Login successful",
       token,
       userData: userDataWithToken,
-      qrCode : qrCode,
+      qrCode : qrImage,
+      whatsappLink
     });
   } catch (err) {
     console.error(err);
@@ -128,15 +143,24 @@ const refreshQRCode = async (req, res) => {
         message: "User not found",
       });
     }
-
-    const qrCode = await generateQRCode(User);
-    await User.update({ qr_code: qrCode },{ where: { id: User.id }});
+    
+    // const qrCode = await generateQRCode(User);
+    // await User.update({ qr_code: qrCode },{ where: { id: User.id }});
+    const { qrImage, whatsappGroupLink } = await generateQRCode(User);
+    
+    await User.update({ 
+      qr_code: qrImage,
+      whatsapp_group_link: whatsappGroupLink 
+    }, { 
+      where: { id: User.id }
+    });
 
     res.status(200).json({
       success: true,
-      qrCode
+      qrCode: qrImage,
+      whatsappGroupLink
     });
-    res.status(201).json({ message: "Login successful", token, userData });
+    // res.status(201).json({ message: "Login successful", token, userData });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Internal Server Error" });

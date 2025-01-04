@@ -1,7 +1,16 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../DB_connection/db_connection'); // Ensure this path is correct
+const sequelize = require('../DB_connection/db_connection'); 
+const Login = require('./auth.model');
 
 const Machine = sequelize.define('Machine', {
+  companyname: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    references: {
+        model: 'Logins',
+        key: 'companyname'
+    }
+},
     zoneName: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -309,5 +318,8 @@ const Machine = sequelize.define('Machine', {
         allowNull: true,
       },
     });
+    Machine.belongsTo(Login, { foreignKey: 'companyname', targetKey: 'companyname' });
+    Login.hasMany(Machine, { foreignKey: 'companyname', sourceKey: 'companyname' });
+    
 
 module.exports = Machine;
