@@ -1,53 +1,53 @@
-const { DataTypes} = require('sequelize');
-const sequelize = require('../DB_connection/db_connection');
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const AuthLogin = sequelize.define('AuthLogin', {
+// Define the schema
+const authLoginSchema = new mongoose.Schema({
   companyname: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true
   },
   username: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true
   },
   email: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    type: String,
+    required: true,
     unique: true,
     validate: {
-      isEmail: true
+      validator: function(v) {
+        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
+      },
+      message: props => `${props.value} is not a valid email!`
     }
   },
   password: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true
   },
   qr_code: {
-    type: DataTypes.TEXT,
-    allowNull: true
+    type: String,
+    required: false
   },
   resetPasswordToken: {
-    type: DataTypes.STRING,
-    allowNull: true,
+    type: String,
+    required: false
   },
   resetPasswordExpire: {
-    type: DataTypes.DATE,
-    allowNull: true,
+    type: Date,
+    required: false
   },
   randomString: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
+    type: String,
+    required: false
+  }
+}, {
+  // This will automatically add and manage createdAt and updatedAt fields
+  timestamps: true
 });
 
+// Create the model
+const AuthLogin = mongoose.model('AuthLogin', authLoginSchema);
 
 module.exports = AuthLogin;

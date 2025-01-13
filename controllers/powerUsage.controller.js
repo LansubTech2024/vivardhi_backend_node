@@ -1,93 +1,132 @@
-
 const PowerUsage = require('../models/powerUsage.model');
-const sequelize = require('../DB_connection/db_connection.js');
-const { Op } = require('sequelize');
 
-const POWER_USAGE_LIMIT = 280; 
+const POWER_USAGE_LIMIT = 280;
 const OVERHEAT_THRESHOLD = 250;
 
 exports.getPowerUsageMetrics = async (req, res) => {
-  const { startDate, endDate } = req.query;
-  try {
-    const currentUsage = await PowerUsage.findOne({ order: [['date', 'DESC']] });
-    const averagePower = await PowerUsage.findAll({
-      attributes: [[sequelize.fn('AVG', sequelize.col('powerConsumed')), 'averagePower']],
-    });
-    const peakPower = await PowerUsage.max('powerConsumed');
-    const totalDowntime = await PowerUsage.sum('totalPowerDowntimeDuration');
+    const { startDate, endDate } = req.query;
+    try {
+        // Get current usage (latest record)
+        const currentUsage = await PowerUsage.findOne().sort({ date: -1 });
 
-    // Check if the current power usage exceeds the limit
-    const isOverLimit = currentUsage && currentUsage.powerConsumed > POWER_USAGE_LIMIT;
-    const isOverheatingRisk = currentUsage && currentUsage.powerConsumed > OVERHEAT_THRESHOLD;  // Overheating risk based on power usage
+        // Get average power consumption
+        const averagePowerResult = await PowerUsage.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    averagePower: { $avg: "$powerConsumed" }
+                }
+            }
+        ]);
 
-    const alertMessage = isOverLimit
-      ? `Power usage is high at ${currentUsage.powerConsumed} kW!`
-      : isOverheatingRisk
-      ? `Warning: High power usage detected at ${currentUsage.powerConsumed} kW. The machine may overheat!`
-      : null;
+        // Get peak power
+        const peakPowerResult = await PowerUsage.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    peakPower: { $max: "$powerConsumed" }
+                }
+            }
+        ]);
 
-    const suggestion = isOverheatingRisk
-      ? "Shut down the machine for cooling to avoid downtime."
-      : isOverLimit
-      ? "Consider reducing machine load or scheduling downtime during peak hours."
-      : null;
+        // Get total downtime
+        const downtimeResult = await PowerUsage.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalDowntime: { $sum: "$totalPowerDowntimeDuration" }
+                }
+            }
+        ]);
 
-    res.json({
-      currentUsage: currentUsage ? currentUsage.powerConsumed : 0,
-      dailyAveragePower: averagePower[0].dataValues.averagePower,
-      peakPower,
-      downtime: totalDowntime,
-      alert: alertMessage,
-      suggestion: suggestion,
-    });
-  } catch (error) {
-    console.error('Error fetching power usage metrics:', error);
-    res.status(500).json({ error: 'Failed to fetch power usage metrics' });
-  }
+        const currentPowerValue = currentUsage ? currentUsage.powerConsumed : 0;
+        const isOverLimit = currentPowerValue > POWER_USAGE_LIMIT;
+        const isOverheatingRisk = currentPowerValue > OVERHEAT_THRESHOLD;
+
+        const alertMessage = isOverLimit
+            ? `Power usage is high at ${currentPowerValue} kW!`
+            : isOverheatingRisk
+                ? `Warning: High power usage detected at ${currentPowerValue} kW. The machine may overheat!`
+                : null;
+
+        const suggestion = isOverheatingRisk
+            ? "Shut down the machine for cooling to avoid downtime."
+            : isOverLimit
+                ? "Consider reducing machine load or scheduling downtime during peak hours."
+                : null;
+
+        res.json({
+            currentUsage: currentPowerValue,
+            dailyAveragePower: averagePowerResult[0]?.averagePower || 0,
+            peakPower: peakPowerResult[0]?.peakPower || 0,
+            downtime: downtimeResult[0]?.totalDowntime || 0,
+            alert: alertMessage,
+            suggestion: suggestion,
+        });
+    } catch (error) {
+        console.error('Error fetching power usage metrics:', error);
+        res.status(500).json({ error: 'Failed to fetch power usage metrics' });
+    }
 };
 
-// Endpoint for live power usage data for the line graph
 exports.getLivePowerUsage = async (req, res) => {
     try {
-      const currentUsage = await PowerUsage.findOne({ order: [['date', 'DESC']] });
-      res.json({
-        livePowerUsage: currentUsage ? currentUsage.powerConsumed : 0,
-      });
+        const currentUsage = await PowerUsage.findOne().sort({ date: -1 });
+        res.json({
+            livePowerUsage: currentUsage ? currentUsage.powerConsumed : 0,
+        });
     } catch (error) {
-      console.error('Error fetching live power usage:', error);
-      res.status(500).json({ error: 'Failed to fetch live power usage' });
+        console.error('Error fetching live power usage:', error);
+        res.status(500).json({ error: 'Failed to fetch live power usage' });
     }
-  };
+};
 
-  exports.getEnergyConsumption = async (req, res) => {
+exports.getEnergyConsumption = async (req, res) => {
     try {
-      const { startDate, endDate } = req.query;
-      
-      const whereClause = {};
-      if (startDate && endDate) {
-        whereClause.date = {
-          [Op.between]: [new Date(startDate), new Date(endDate)]
-        };
-      }
-  
-      const energyData = await PowerUsage.findAll({
-        where: whereClause,
-        attributes: [
-          [sequelize.fn('DATE', sequelize.col('date')), 'date'],
-          [sequelize.fn('SUM', sequelize.col('energyConsumption')), 'energyConsumption'],
-        ],
-        group: ['date'],
-        order: [[sequelize.fn('DATE', sequelize.col('date')), 'ASC']],
-      });
-  
-      const formattedData = energyData.map((entry) => ({
-        date: new Date(entry.date).toISOString().split('T')[0],
-        energyConsumption: Number(entry.energyConsumption).toFixed(2),
-      }));
-  
-      res.json(formattedData);
+        const { startDate, endDate } = req.query;
+
+        let matchStage = {};
+        if (startDate && endDate) {
+            matchStage = {
+                date: {
+                    $gte: new Date(startDate),
+                    $lte: new Date(endDate)
+                }
+            };
+        }
+
+        const energyData = await PowerUsage.aggregate([
+            {
+                $match: matchStage
+            },
+            {
+                $group: {
+                    _id: {
+                        $dateToString: {
+                            format: "%Y-%m-%d",
+                            date: "$date"
+                        }
+                    },
+                    energyConsumption: { $sum: "$energyConsumption" }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    date: "$_id",
+                    energyConsumption: {
+                        $round: ["$energyConsumption", 2]
+                    }
+                }
+            }
+        ]);
+
+        res.json(energyData);
     } catch (error) {
-      console.error('Error fetching energy consumption data:', error);
-      res.status(500).json({ error: 'Failed to fetch energy consumption data' });
+        console.error('Error fetching energy consumption data:', error);
+        res.status(500).json({ error: 'Failed to fetch energy consumption data' });
     }
-  };
+};

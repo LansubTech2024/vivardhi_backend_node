@@ -3,21 +3,23 @@ const ProductionData = require('../models/Production.model');
 // Fetching data for productive analysis
 exports.getProductiveAnalysisData = async (req, res) => {
     try {
-        const zoneData = await ProductionData.findAll({
-            attributes: [
-                'zoneName',
-                'date',
-                'machineId',
-                'rawMaterialInput',
-                'rawMaterialOutput',
-                'wasteScrap',
-                'wasteDefect',
-                'targetProduction',
-                'actualProduction',
-                'overallProductivity'
-            ]
+        // Using MongoDB find() instead of Sequelize findAll()
+        const zoneData = await ProductionData.find({}, {
+            zoneName: 1,
+            date: 1,
+            machineId: 1,
+            rawMaterialInput: 1,
+            rawMaterialOutput: 1,
+            wasteScrap: 1,
+            wasteDefect: 1,
+            targetProduction: 1,
+            actualProduction: 1,
+            overallProductivity: 1,
+            _id: 0  // Exclude the _id field from results
         });
 
+        // Since MongoDB already returns plain objects, we don't need complex mapping
+        // But keeping the map to ensure the exact same response structure
         const formattedData = zoneData.map((device) => ({
             zoneName: device.zoneName,
             date: device.date,

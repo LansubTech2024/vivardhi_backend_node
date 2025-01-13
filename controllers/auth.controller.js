@@ -18,29 +18,24 @@ const transporter = nodemailer.createTransport({
 // SignUp Controller
 const SignUp = async (req, res) => {
   try {
-    const {
-      companyname,
-      username,
-      email,
-      password,
-    } = req.body;
-    if (
-      !companyname||
-      !username||
-      !email ||
-      !password
-    ) {
+    const { companyname, username, email, password } = req.body;
+    
+    if (!companyname || !username || !email || !password) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
       });
     }
-    const ExistUser = await userModel.findOne({ where: { email: email }, });
+    
+    // Changed from Sequelize to MongoDB syntax
+    const ExistUser = await userModel.findOne({ email });
+    
     if (ExistUser) {
       return res.status(400).json({
         message: "Email is already registered",
       });
     }
+    
     const hashedPassword = await auth.hashPassword(password);
     const newUser = new userModel({
       companyname,
@@ -48,7 +43,9 @@ const SignUp = async (req, res) => {
       email,
       password: hashedPassword,
     });
+    
     await newUser.save();
+    
     res.status(201).json({
       success: true,
       message: "User registered successfully",
@@ -67,7 +64,9 @@ const SignIn = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const User = await userModel.findOne({ where: { email } });
+    // Changed from Sequelize to MongoDB syntax
+    const User = await userModel.findOne({ email });
+    
     if (!User) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
@@ -77,27 +76,24 @@ const SignIn = async (req, res) => {
       return res.status(401).json({ message: "Invalid Password" });
     }
 
-     // Generate QR code
-     const qrCode = await generateQRCode(User);
+    // Generate QR code
+    const qrCode = await generateQRCode(User);
     
-     // Update user with new QR code
-     await User.update({ qr_code: qrCode },{ where: { id: User.id }});
-
-     //const updatedUser = await User.findOne(User.id);
+    // Update user with new QR code - MongoDB syntax
+    await userModel.findByIdAndUpdate(User._id, { qr_code: qrCode });
 
     const token = await auth.createToken({
-      id: User.id,
+      id: User._id,
       name: User.name,
       email: User.email,
     });
 
-    const userData = await userModel.findOne(
-      { where: { email }, attributes: { exclude: ["password"] } }
-    );
+    // Get user data without password - MongoDB syntax
+    const userData = await userModel.findOne({ email }).select('-password');
 
     // Add token to userData
     const userDataWithToken = {
-      ...userData.toJSON(),
+      ...userData.toObject(),
       token,
     };
 
@@ -105,7 +101,7 @@ const SignIn = async (req, res) => {
       message: "Login successful",
       token,
       userData: userDataWithToken,
-      qrCode : qrCode,
+      qrCode,
     });
   } catch (err) {
     console.error(err);
@@ -118,9 +114,10 @@ const SignIn = async (req, res) => {
 
 const refreshQRCode = async (req, res) => {
   try {
-    console.log(req.user); 
-    const userId = req.user.id; // Assuming you have user info in request from auth middleware
-    const User = await userModel.findOne({ where: { id: userId } });
+    const userId = req.user.id;
+    
+    // Changed to MongoDB syntax
+    const User = await userModel.findById(userId);
     
     if (!User) {
       return res.status(404).json({
@@ -130,21 +127,23 @@ const refreshQRCode = async (req, res) => {
     }
 
     const qrCode = await generateQRCode(User);
-    await User.update({ qr_code: qrCode },{ where: { id: User.id }});
+    await userModel.findByIdAndUpdate(userId, { qr_code: qrCode });
 
     res.status(200).json({
       success: true,
       qrCode
     });
-    res.status(201).json({ message: "Login successful", token, userData });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
 const ForgotPassword = async (req, res) => {
   try {
+    // Changed to MongoDB syntax
     const user = await userModel.findOne({ email: req.body.email });
+    
     if (user) {
       const randomString = randomstring.generate({
         length: 10,
@@ -152,21 +151,12 @@ const ForgotPassword = async (req, res) => {
       });
       const expirationTimestamp = Date.now() + 2 * 60 * 1000;
 
-      console.log(expirationTimestamp);
-
       const resetLink = `https://samplefrontendserver-ajeta9hdc3h5hpdg.southeastasia-01.azurewebsites.net/resetpassword/${randomString}/${expirationTimestamp}`;
 
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_ID,
-          pass: process.env.EMAIL_PASSWORD,
-        },
-      });
       const mailOptions = {
         from: process.env.EMAIL_ID,
         to: user.email,
-        subject: "Password Reset",  
+        subject: "Password Reset",
         html: `
         <h3>Password Change Request</h3>
         <p>Click on the below link to reset your password</p>
@@ -181,18 +171,16 @@ const ForgotPassword = async (req, res) => {
             message: "Failed to send the password reset mail",
           });
         } else {
-          console.log("Password reset mail sent", +info.response);
           try {
-            user.randomString = randomString;
-            await user.save();
+            // Update randomString - MongoDB syntax
+            await userModel.findByIdAndUpdate(user._id, { randomString });
             res.status(201).send({
-              message:
-                "Password reset mail sent successfully.Random string updated in the database.",
+              message: "Password reset mail sent successfully. Random string updated in the database.",
             });
           } catch (err) {
             console.error(err);
             res.status(500).json({
-              message: "Failed update random string in the database",
+              message: "Failed to update random string in the database",
             });
           }
         }
@@ -214,17 +202,17 @@ const ForgotPassword = async (req, res) => {
 const ResetPassword = async (req, res) => {
   try {
     const { randomString, expirationTimestamp } = req.params;
-
     const { newPassword, confirmPassword } = req.body;
 
-    // Validate if passwords match
     if (newPassword !== confirmPassword) {
       return res.status(400).send({
         message: "Passwords do not match",
       });
     }
 
-    const user = await userModel.findOne({ randomString: randomString });
+    // Changed to MongoDB syntax
+    const user = await userModel.findOne({ randomString });
+    
     if (!user || user.randomString !== randomString) {
       return res.status(400).send({
         message: "Invalid Random String",
@@ -233,26 +221,26 @@ const ResetPassword = async (req, res) => {
 
     if (expirationTimestamp && expirationTimestamp < Date.now()) {
       return res.status(400).send({
-        message:
-          "Expiration token has expired. Please request a new reset link.",
+        message: "Expiration token has expired. Please request a new reset link.",
+      });
+    }
+
+    if (req.body.newPassword) {
+      const hashedPassword = await auth.hashPassword(req.body.newPassword);
+      
+      // Update password and clear randomString - MongoDB syntax
+      await userModel.findByIdAndUpdate(user._id, {
+        password: hashedPassword,
+        randomString: null
+      });
+
+      return res.status(200).send({
+        message: "Your new password has been updated successfully",
       });
     } else {
-      if (req.body.newPassword) {
-        const newPassword = await auth.hashPassword(req.body.newPassword);
-
-        user.password = newPassword;
-        user.randomString = null;
-        await user.save();
-
-        return res.status(200).send({
-          message: "Your new password has been updated successfully",
-        });
-      } else {
-        return res.status(400).send({
-          message:
-            "Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
-        });
-      }
+      return res.status(400).send({
+        message: "Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+      });
     }
   } catch (error) {
     console.log(error);
@@ -262,19 +250,19 @@ const ResetPassword = async (req, res) => {
   }
 };
 
-
-// Update Profile Controller
 const UpdateProfile = async (req, res) => {
   try {
     const { userId } = req.params;
     const { companyname, username, email } = req.body;
 
-    const User = await userModel.findByPk(userId);
+    // Changed to MongoDB syntax
+    const User = await userModel.findById(userId);
+    
     if (!User) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    await User.update({ companyname, username, email });
+    await userModel.findByIdAndUpdate(userId, { companyname, username, email });
     res.status(200).json({ message: "Profile updated successfully" });
   } catch (err) {
     console.error(err);
@@ -289,5 +277,4 @@ module.exports = {
   ResetPassword,
   refreshQRCode,
   UpdateProfile,
-
 };

@@ -1,254 +1,254 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../DB_connection/db_connection');
+const mongoose = require('mongoose');
 
-const ProductionData = sequelize.define('ProductionData', {
+// Define the schema
+const ProductionDataSchema = new mongoose.Schema({
     zoneName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      machineId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      actualRunTime: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      plannedTime: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      manpower: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      uptime: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      totalDowntimeDuration: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      downtimeReasons: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      totalPieces: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      target: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      efficiency: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      goodPieces: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      totalProduction: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      rawMaterialUsed: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      defectRate: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      voltage: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      current: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      powerConsumed: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      totalPowerDowntimeDuration: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      powerDowntimeReasons: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      rawMaterialInput: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      rawMaterialOutput: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      wasteScrap: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      wasteDefect: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      wasteRecycled: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-    
-      // Inventory data fields
-      rawMaterialId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      rawMaterialName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      currentStock: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      minimumRequired: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-    
-      // Finished Goods
-      finishedGoodId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      finishedGoodName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      finishedGoodCurrentStock: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      finishedGoodMinimumRequired: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-    
-      // Resource allocation fields
-      workerId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      workerName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      role: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      allocatedHours: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      workedHours: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      leave: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      currentShift: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      allocation: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      equipmentId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      equipmentName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      equipmentAllocatedHours: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      utilizationRate: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-    
-      // Production rate fields
-      targetProduction: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      actualProduction: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      overallProductivity: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-    
-      // Tool management fields
-      toolInUseId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      toolInUseName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      toolInUseUsageTime: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      toolInUseCondition: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      toolInUseTotalOperation: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      toolInUseSuccessOperation: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      toolInUseEfficiency: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      totalTools: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      toolsAvailable: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-},
-{
-    tableName: 'machines', 
-    timestamps: false,
-  }
-);
+        type: String,
+        required: true  // equivalent to allowNull: false
+    },
+    machineId: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        required: true
+    },
+    actualRunTime: {
+        type: Number,
+        required: false
+    },
+    plannedTime: {
+        type: Number,
+        required: false
+    },
+    manpower: {
+        type: Number,
+        required: false
+    },
+    uptime: {
+        type: Number,
+        required: false
+    },
+    totalDowntimeDuration: {
+        type: Number,
+        required: false
+    },
+    downtimeReasons: {
+        type: String,
+        required: false
+    },
+    totalPieces: {
+        type: Number,
+        required: false
+    },
+    target: {
+        type: Number,
+        required: false
+    },
+    efficiency: {
+        type: Number,
+        required: false
+    },
+    goodPieces: {
+        type: Number,
+        required: false
+    },
+    totalProduction: {
+        type: Number,
+        required: false
+    },
+    rawMaterialUsed: {
+        type: Number,
+        required: false
+    },
+    defectRate: {
+        type: Number,
+        required: false
+    },
+    voltage: {
+        type: Number,
+        required: false
+    },
+    current: {
+        type: Number,
+        required: false
+    },
+    powerConsumed: {
+        type: Number,
+        required: false
+    },
+    totalPowerDowntimeDuration: {
+        type: Number,
+        required: false
+    },
+    powerDowntimeReasons: {
+        type: String,
+        required: false
+    },
+    rawMaterialInput: {
+        type: Number,
+        required: false
+    },
+    rawMaterialOutput: {
+        type: Number,
+        required: false
+    },
+    wasteScrap: {
+        type: Number,
+        required: false
+    },
+    wasteDefect: {
+        type: Number,
+        required: false
+    },
+    wasteRecycled: {
+        type: Number,
+        required: false
+    },
 
+    // Inventory data fields
+    rawMaterialId: {
+        type: String,
+        required: false
+    },
+    rawMaterialName: {
+        type: String,
+        required: false
+    },
+    currentStock: {
+        type: Number,
+        required: false
+    },
+    minimumRequired: {
+        type: Number,
+        required: false
+    },
+
+    // Finished Goods
+    finishedGoodId: {
+        type: String,
+        required: false
+    },
+    finishedGoodName: {
+        type: String,
+        required: false
+    },
+    finishedGoodCurrentStock: {
+        type: Number,
+        required: false
+    },
+    finishedGoodMinimumRequired: {
+        type: Number,
+        required: false
+    },
+
+    // Resource allocation fields
+    workerId: {
+        type: String,
+        required: false
+    },
+    workerName: {
+        type: String,
+        required: false
+    },
+    role: {
+        type: String,
+        required: false
+    },
+    allocatedHours: {
+        type: Number,
+        required: false
+    },
+    workedHours: {
+        type: Number,
+        required: false
+    },
+    leave: {
+        type: Number,
+        required: false
+    },
+    currentShift: {
+        type: String,
+        required: false
+    },
+    allocation: {
+        type: String,
+        required: false
+    },
+    equipmentId: {
+        type: String,
+        required: false
+    },
+    equipmentName: {
+        type: String,
+        required: false
+    },
+    equipmentAllocatedHours: {
+        type: Number,
+        required: false
+    },
+    utilizationRate: {
+        type: Number,
+        required: false
+    },
+
+    // Production rate fields
+    targetProduction: {
+        type: Number,
+        required: false
+    },
+    actualProduction: {
+        type: Number,
+        required: false
+    },
+    overallProductivity: {
+        type: Number,
+        required: false
+    },
+
+    // Tool management fields
+    toolInUseId: {
+        type: String,
+        required: false
+    },
+    toolInUseName: {
+        type: String,
+        required: false
+    },
+    toolInUseUsageTime: {
+        type: Number,
+        required: false
+    },
+    toolInUseCondition: {
+        type: String,
+        required: false
+    },
+    toolInUseTotalOperation: {
+        type: Number,
+        required: false
+    },
+    toolInUseSuccessOperation: {
+        type: Number,
+        required: false
+    },
+    toolInUseEfficiency: {
+        type: Number,
+        required: false
+    },
+    totalTools: {
+        type: Number,
+        required: false
+    },
+    toolsAvailable: {
+        type: Number,
+        required: false
+    }
+}, {
+    collection: 'machines',  // equivalent to tableName
+    timestamps: false        // keeps timestamps disabled
+});
+
+// Create and export the model
+const ProductionData = mongoose.model('ProductionData', ProductionDataSchema);
 module.exports = ProductionData;
