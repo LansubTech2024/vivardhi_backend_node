@@ -26,11 +26,6 @@ const authLoginSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  qr_code: {
-    type: String,
-    required: false
-  },
-
   resetPasswordToken: {
     type: String,
     required: false

@@ -37,33 +37,33 @@
 // );
 
 // module.exports = DetailedGraphModel;
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
-// Define the schema
-const DetailedGraphSchema = new mongoose.Schema({
-    chw_in_temp: {
-        type: Number    // equivalent to FLOAT
-    },
-    chw_out_temp: {
-        type: Number
-    },
-    cow_in_temp: {
-        type: Number
-    },
-    cow_out_temp: {
-        type: Number
-    },
-    vaccum_pr: {
-        type: Number
-    },
-    device_date: {
-        type: Date
-    }
-}, {
-    collection: 'devices',  // equivalent to tableName
-    timestamps: true       // keeps the timestamps functionality
-});
+// // Define the schema
+// const DetailedGraphSchema = new mongoose.Schema({
+//     chw_in_temp: {
+//         type: Number    // equivalent to FLOAT
+//     },
+//     chw_out_temp: {
+//         type: Number
+//     },
+//     cow_in_temp: {
+//         type: Number
+//     },
+//     cow_out_temp: {
+//         type: Number
+//     },
+//     vaccum_pr: {
+//         type: Number
+//     },
+//     device_date: {
+//         type: Date
+//     }
+// }, {
+//     collection: 'devices',  // equivalent to tableName
+//     timestamps: true       // keeps the timestamps functionality
+// });
 
-// Create and export the model
-const DetailedGraphModel = mongoose.model('DetailedGraphModel', DetailedGraphSchema);
-module.exports = DetailedGraphModel;
+// // Create and export the model
+// const DetailedGraphModel = mongoose.model('DetailedGraphModel', DetailedGraphSchema);
+// module.exports = DetailedGraphModel;
