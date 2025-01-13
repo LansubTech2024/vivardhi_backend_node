@@ -61,7 +61,7 @@ const ResourceSchema = new mongoose.Schema({
         maxLength: 50
     }
 }, {
-    collection: 'Machines',  // equivalent to tableName
+    collection: 'machines',  // equivalent to tableName
     timestamps: false       // keeps timestamps disabled as in original
 });
 

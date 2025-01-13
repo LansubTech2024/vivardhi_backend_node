@@ -26,7 +26,7 @@ const authLoginSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  
+
 
   resetPasswordToken: {
     type: String,
