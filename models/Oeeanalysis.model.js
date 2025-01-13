@@ -156,6 +156,7 @@ const deviceSchema = new mongoose.Schema({
         required: false
     },
     wasteDefect: {
+
         type: Number,
         required: false
     }
@@ -163,6 +164,7 @@ const deviceSchema = new mongoose.Schema({
     collection: 'machines',
     timestamps: false
 });
+
 
 const Device = mongoose.model('Device', deviceSchema);
 

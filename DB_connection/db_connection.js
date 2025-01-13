@@ -16,6 +16,7 @@
 // //  });
 
 
+
 // const sequelize = new Sequelize('opfact', 'root', 'sys@0805', {
 //  host: 'localhost',
 //  dialect: 'mysql',

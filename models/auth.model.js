@@ -30,6 +30,7 @@ const authLoginSchema = new mongoose.Schema({
     type: String,
     required: false
   },
+
   resetPasswordToken: {
     type: String,
     required: false
@@ -37,7 +38,16 @@ const authLoginSchema = new mongoose.Schema({
   resetPasswordExpire: {
     type: Date,
     required: false
+
   },
+  // resetPasswordToken: {
+  //   type: DataTypes.STRING,
+  //   allowNull: true,
+  // },
+  // resetPasswordExpire: {
+  //   type: DataTypes.DATE,
+  //   allowNull: true,
+  // },
   randomString: {
     type: String,
     required: false
@@ -47,7 +57,9 @@ const authLoginSchema = new mongoose.Schema({
   timestamps: true
 });
 
+
 // Create the model
 const AuthLogin = mongoose.model('AuthLogin', authLoginSchema);
+
 
 module.exports = AuthLogin;

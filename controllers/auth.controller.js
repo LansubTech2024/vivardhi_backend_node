@@ -18,9 +18,11 @@ const transporter = nodemailer.createTransport({
 // SignUp Controller
 const SignUp = async (req, res) => {
   try {
+
     const { companyname, username, email, password } = req.body;
     
     if (!companyname || !username || !email || !password) {
+
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -40,6 +42,7 @@ const SignUp = async (req, res) => {
     const newUser = new userModel({
       companyname,
       username,
+      phonenumber,
       email,
       password: hashedPassword,
     });
@@ -76,11 +79,13 @@ const SignIn = async (req, res) => {
       return res.status(401).json({ message: "Invalid Password" });
     }
 
+
     // Generate QR code
     const qrCode = await generateQRCode(User);
     
     // Update user with new QR code - MongoDB syntax
     await userModel.findByIdAndUpdate(User._id, { qr_code: qrCode });
+
 
     const token = await auth.createToken({
       id: User._id,
@@ -101,7 +106,9 @@ const SignIn = async (req, res) => {
       message: "Login successful",
       token,
       userData: userDataWithToken,
+
       qrCode,
+
     });
   } catch (err) {
     console.error(err);
@@ -126,13 +133,19 @@ const refreshQRCode = async (req, res) => {
       });
     }
 
+
     const qrCode = await generateQRCode(User);
     await userModel.findByIdAndUpdate(userId, { qr_code: qrCode });
 
+
     res.status(200).json({
       success: true,
-      qrCode
+      qrCode: qrImage,
+      whatsappGroupLink
     });
+
+    // res.status(201).json({ message: "Login successful", token, userData });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Internal Server Error" });
