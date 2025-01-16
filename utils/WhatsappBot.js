@@ -1,98 +1,34 @@
+
 // const { Client, LocalAuth } = require('whatsapp-web.js');
 // const Machine = require('../models/sql_data.model'); 
 // const { Op } = require('sequelize');
 
 // class WhatsAppBot {
 //   constructor() {
-//     this.client = null;
-//     this.isReady = false;
-//     this.qrCode = null;
-//     this.initializationPromise = null;
-//   }
-
-//   async initialize() {
-//     if (this.initializationPromise) {
-//       return this.initializationPromise;
-//     }
-
-//     this.initializationPromise = new Promise((resolve, reject) => {
-//       try {
-//         this.client = new Client({
-//           authStrategy: new LocalAuth(),
-//           puppeteer: {
-//             headless: true,
-//             args: ['--no-sandbox']
-//           }
-//         });
-
-//         // Handle QR code generation
-//         this.client.on('qr', (qr) => {
-//           console.log('QR Code received:');
-//           this.qrCode = qr;
-//           // Display QR in terminal for easy scanning
-//           qrcode.generate(qr, { small: true });
-//         });
-
-//         this.client.on('ready', () => {
-//           console.log('WhatsApp client is ready!');
-//           this.isReady = true;
-//           resolve();
-//         });
-
-//         this.client.on('auth_failure', (error) => {
-//           console.error('Auth failure:', error);
-//           this.isReady = false;
-//           reject(error);
-//         });
-
-//         this.client.on('disconnected', () => {
-//           console.log('Client disconnected');
-//           this.isReady = false;
-//           this.qrCode = null;
-//         });
-
-//         this.client.on('message', async (message) => {
-//           if (this.isReady) {
-//             try {
-//               await this.handleMessage(message);
-//             } catch (error) {
-//               console.error('Error handling message:', error);
-//             }
-//           }
-//         });
-
-//         this.client.initialize().catch((error) => {
-//           console.error('Failed to initialize client:', error);
-//           reject(error);
-//         });
-
-//       } catch (error) {
-//         console.error('Error in initialization:', error);
-//         reject(error);
+//     this.client = new Client({
+//       authStrategy: new LocalAuth(),
+//       puppeteer: {
+//         args: ['--no-sandbox']
 //       }
 //     });
 
-//     return this.initializationPromise;
+//     this.initializeClient();
 //   }
 
-//   getQRCode() {
-//     return this.qrCode;
-//   }
+//   initializeClient() {
+//     this.client.on('ready', () => {
+//       console.log('WhatsApp client is ready!');
+//     });
 
-//   async waitForReady(timeout = 60000) {
-//     const startTime = Date.now();
-    
-//     while (!this.isReady && Date.now() - startTime < timeout) {
-//       if (this.qrCode) {
-//         // If we have a QR code, wait longer
-//         timeout = 120000; // 2 minutes total wait time for QR scan
+//     this.client.on('message', async (message) => {
+//       try {
+//         await this.handleMessage(message);
+//       } catch (error) {
+//         console.error('Error handling message:', error);
 //       }
-//       await new Promise(resolve => setTimeout(resolve, 1000));
-//     }
-    
-//     if (!this.isReady) {
-//       throw new Error('WhatsApp client failed to initialize. Please scan the QR code to authenticate.');
-//     }
+//     });
+
+//     this.client.initialize();
 //   }
 
 //   async handleMessage(message) {
@@ -183,10 +119,6 @@
 
 //   async sendWelcomeMessage(phoneNumber, username) {
 //     try {
-//       if (!this.isReady) {
-//         await this.waitForReady();
-//       }
-
 //       const chatId = phoneNumber.substring(1) + "@c.us";
 //       await this.client.sendMessage(chatId, 
 //         `Hi ${username}, welcome to Opfact! 👋\n\n` +
@@ -199,32 +131,11 @@
 //         "- Efficiency and performance\n\n" +
 //         "Just ask me about any of these topics!"
 //       );
-//       console.log('Welcome message sent successfully to:', chatId);
 //     } catch (error) {
 //       console.error('Error sending welcome message:', error);
-//       throw error; // Propagate error to caller
-//     }
-//   }
-
-//   // Method to check if client is ready
-//   isClientReady() {
-//     return this.isReady;
-//   }
-
-//   // Method to reinitialize client if needed
-//   async reinitialize() {
-//     if (!this.isReady) {
-//       this.initialize();
-//       await this.waitForReady();
 //     }
 //   }
 // }
 
-// // Create singleton instance
 // const whatsAppBot = new WhatsAppBot();
-
-// // Initialize the bot immediately
-// whatsAppBot.initialize().catch(error => {
-//   console.error('Failed to initialize WhatsApp bot:', error);
-// });
 // module.exports = whatsAppBot;

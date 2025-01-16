@@ -1,6 +1,5 @@
 const { spawn } = require('child_process');
 const ChartData = require('../models/detailed_graph.model');
-const { Op } = require('sequelize');
 
 class ChartController {
   static pythonScriptPath = 'python/detailed_graph.py';
@@ -10,16 +9,18 @@ class ChartController {
       const endDate = new Date();
       const startDate = new Date(endDate.getTime() - (days * 24 * 60 * 60 * 1000));
 
-      const data = await ChartData.findAll({
-        attributes: ['device_date', 'chw_in_temp', 'chw_out_temp', 'vaccum_pr', 'cow_in_temp', 'cow_out_temp'],
-        where: {
-          device_date: {
-            [Op.between]: [startDate, endDate]
-          }
-        },
-        order: [['device_date', 'DESC']],
-      });
-      return data.map(item => item.toJSON());
+      // MongoDB query instead of Sequelize
+      const data = await ChartData.find({
+        device_date: {
+          $gte: startDate,
+          $lte: endDate
+        }
+      })
+      .select('device_date chw_in_temp chw_out_temp vaccum_pr cow_in_temp cow_out_temp')
+      .sort({ device_date: -1 }); // -1 for DESC order
+
+      // MongoDB documents are already JavaScript objects
+      return data;
     } catch (error) {
       console.error('Error fetching chart data:', error);
       throw error;

@@ -1,100 +1,133 @@
-
 const Machine = require('../models/machineAnalysis.model');
-const sequelize = require("../DB_connection/db_connection");
 
 exports.getAverageMachineData = async (req, res) => {
   try {
-    // Fetch and calculate average values for each machine by zone
-    const averageData = await Machine.findAll({
-      attributes: [
-        "zoneName",
-        "machineId",
-        [sequelize.fn('AVG', sequelize.col('productionRate')), 'avgProductionRate'],
-        [sequelize.fn('AVG', sequelize.col('scrapRate')), 'avgScrapRate'],
-        [sequelize.fn('AVG', sequelize.col('downtime')), 'avgDowntime'],
-        [sequelize.fn('AVG', sequelize.col('temperature')), 'avgTemperature'],
-        [sequelize.fn('AVG', sequelize.col('energyConsumption')), 'avgEnergyConsumption'],
-      ],
-      group: ['zoneName', 'machineId'],  // Group by zone and machineId
-      order: [["zoneName", "ASC"], ["machineId", "ASC"]],  // Optional: Order results by zone and machineId
-    });
+    // Fetch and calculate average values for each machine by zone using MongoDB aggregation
+    const averageData = await Machine.aggregate([
+      {
+        $group: {
+          _id: {
+            zoneName: "$zoneName",
+            machineId: "$machineId"
+          },
+          avgProductionRate: { $avg: "$productionRate" },
+          avgScrapRate: { $avg: "$scrapRate" },
+          avgDowntime: { $avg: "$downtime" },
+          avgTemperature: { $avg: "$temperature" },
+          avgEnergyConsumption: { $avg: "$energyConsumption" }
+        }
+      },
+      {
+        $sort: {
+          "_id.zoneName": 1,
+          "_id.machineId": 1
+        }
+      }
+    ]);
 
-    // Format the averages to 2 decimal places using toFixed()
-    const formattedData = averageData.map(item => {
-      return {
-        zone: item.zoneName,
-        machineId: item.machineId,
-        avgProductionRate: parseFloat(item.dataValues.avgProductionRate).toFixed(2),
-        avgScrapRate: parseFloat(item.dataValues.avgScrapRate).toFixed(2),
-        avgDowntime: parseFloat(item.dataValues.avgDowntime).toFixed(2),
-        avgTemperature: parseFloat(item.dataValues.avgTemperature).toFixed(2),
-        avgEnergyConsumption: parseFloat(item.dataValues.avgEnergyConsumption).toFixed(2),
-      };
-    });
+    if (!averageData || averageData.length === 0) {
+      return res.status(404).json({ message: "No machine data found" });
+    }
 
-    // Send the formatted data as a response
+    // Format the averages to 2 decimal places
+    const formattedData = averageData.map(item => ({
+      zone: item._id.zoneName,
+      machineId: item._id.machineId,
+      avgProductionRate: Number(item.avgProductionRate?.toFixed(2) || 0),
+      avgScrapRate: Number(item.avgScrapRate?.toFixed(2) || 0),
+      avgDowntime: Number(item.avgDowntime?.toFixed(2) || 0),
+      avgTemperature: Number(item.avgTemperature?.toFixed(2) || 0),
+      avgEnergyConsumption: Number(item.avgEnergyConsumption?.toFixed(2) || 0)
+    }));
+
     res.json(formattedData);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching machine data", error });
+    console.error("Error in getAverageMachineData:", error);
+    res.status(500).json({ 
+      message: "Error fetching machine data", 
+      error: error.message 
+    });
   }
 };
-  
-  // Get detailed data for a specific machine
-  exports.getMachineDetails = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const machines = await Machine.findAll({
-        where: { machineId: id },
-        attributes: [
-          "machineId",
-          "zoneName",
-          "equipmentName",
-          [sequelize.fn("AVG", sequelize.col("spindleSpeed")), "avgSpindleSpeed"],
-          [sequelize.fn("AVG", sequelize.col("partRejectionRate")), "avgPartRejectionRate"],
-          [sequelize.fn("AVG", sequelize.col("utilizationRate")), "avgUtilizationRate"],
-          [sequelize.fn("AVG", sequelize.col("feedRate")), "avgFeedRate"],
-          [sequelize.fn("AVG", sequelize.col("cycleTime")), "avgCycleTime"],
-          [sequelize.fn("AVG", sequelize.col("machineUtilization")), "avgMachineUtilization"],
-          [sequelize.fn("AVG", sequelize.col("temperature")), "avgTemperature"],
-          [sequelize.fn("AVG", sequelize.col("chuckPressure")), "avgChuckPressure"],
-          [sequelize.fn("AVG", sequelize.col("downtime")), "avgDowntime"],
-          [sequelize.fn("AVG", sequelize.col("cutDepth")), "avgCutDepth"],
-          [sequelize.fn("AVG", sequelize.col("materialRemovalRate")), "avgMaterialRemovalRate"],
-          [sequelize.fn("AVG", sequelize.col("surfaceFinishQuality")), "avgSurfaceFinishQuality"],
-          [sequelize.fn("AVG", sequelize.col("toolLife")), "avgToolLife"],
-          [sequelize.fn("AVG", sequelize.col("toolWear")), "avgToolWear"]
-        ],
-        group: ['zoneName', 'machineId', 'equipmentName'], // Group by machineId to calculate averages for each machine
-        order: [["zoneName", "ASC"], ["machineId", "ASC"], ["equipmentName", "ASC"]],
-      });
-  
-      if (machines.length > 0) {
-        // Apply toFixed to each average value
-      const formattedMachine = machines.map((m) => ({
-        machineId: m.machineId,
-        zone: m.zoneName,
-        equipmentName: m.equipmentName,
-        avgSpindleSpeed: parseFloat(m.dataValues.avgSpindleSpeed).toFixed(2),
-        avgPartRejectionRate: parseFloat(m.dataValues.avgPartRejectionRate).toFixed(2),
-        avgUtilizationRate: parseFloat(m.dataValues.avgUtilizationRate).toFixed(2),
-        avgFeedRate: parseFloat(m.dataValues.avgFeedRate).toFixed(2),
-        avgCycleTime: parseFloat(m.dataValues.avgCycleTime).toFixed(2),
-        avgMachineUtilization: parseFloat(m.dataValues.avgMachineUtilization).toFixed(2),
-        avgTemperature: parseFloat(m.dataValues.avgTemperature).toFixed(2),
-        avgChuckPressure: parseFloat(m.dataValues.avgChuckPressure).toFixed(2),
-        avgDowntime: parseFloat(m.dataValues.avgDowntime).toFixed(2),
-        avgCutDepth: parseFloat(m.dataValues.avgCutDepth).toFixed(2),
-        avgMaterialRemovalRate: parseFloat(m.dataValues.avgMaterialRemovalRate).toFixed(2),
-        avgSurfaceFinishQuality: parseFloat(m.dataValues.avgSurfaceFinishQuality).toFixed(2),
-        avgToolLife: parseFloat(m.dataValues.avgToolLife).toFixed(2),
-        avgToolWear: parseFloat(m.dataValues.avgToolWear).toFixed(2),
-      }));
 
-      res.json(formattedMachine);
-      } else {
-        res.status(404).json({ message: "No machines found for this zone" });
-      }
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching machine details by zone", error });
+exports.getMachineDetails = async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    // Add validation for machineId
+    if (!id) {
+      return res.status(400).json({ message: "Machine ID is required" });
     }
-  };
+
+    const machines = await Machine.aggregate([
+      {
+        // Convert string ID to the correct type if needed
+        $match: { machineId: id }
+      },
+      {
+        $group: {
+          _id: {
+            zoneName: "$zoneName",
+            machineId: "$machineId",
+            equipmentName: "$equipmentName"
+          },
+          avgSpindleSpeed: { $avg: "$spindleSpeed" },
+          avgPartRejectionRate: { $avg: "$partRejectionRate" },
+          avgUtilizationRate: { $avg: "$utilizationRate" },
+          avgFeedRate: { $avg: "$feedRate" },
+          avgCycleTime: { $avg: "$cycleTime" },
+          avgMachineUtilization: { $avg: "$machineUtilization" },
+          avgTemperature: { $avg: "$temperature" },
+          avgChuckPressure: { $avg: "$chuckPressure" },
+          avgDowntime: { $avg: "$downtime" },
+          avgCutDepth: { $avg: "$cutDepth" },
+          avgMaterialRemovalRate: { $avg: "$materialRemovalRate" },
+          avgSurfaceFinishQuality: { $avg: "$surfaceFinishQuality" },
+          avgToolLife: { $avg: "$toolLife" },
+          avgToolWear: { $avg: "$toolWear" }
+        }
+      },
+      {
+        $sort: {
+          "_id.zoneName": 1,
+          "_id.machineId": 1,
+          "_id.equipmentName": 1
+        }
+      }
+    ]);
+
+    if (!machines || machines.length === 0) {
+      return res.status(404).json({ 
+        message: `No machine found with ID: ${id}` 
+      });
+    }
+
+    const formattedMachine = machines.map(m => ({
+      machineId: m._id.machineId,
+      zone: m._id.zoneName,
+      equipmentName: m._id.equipmentName,
+      avgSpindleSpeed: Number(m.avgSpindleSpeed?.toFixed(2) || 0),
+      avgPartRejectionRate: Number(m.avgPartRejectionRate?.toFixed(2) || 0),
+      avgUtilizationRate: Number(m.avgUtilizationRate?.toFixed(2) || 0),
+      avgFeedRate: Number(m.avgFeedRate?.toFixed(2) || 0),
+      avgCycleTime: Number(m.avgCycleTime?.toFixed(2) || 0),
+      avgMachineUtilization: Number(m.avgMachineUtilization?.toFixed(2) || 0),
+      avgTemperature: Number(m.avgTemperature?.toFixed(2) || 0),
+      avgChuckPressure: Number(m.avgChuckPressure?.toFixed(2) || 0),
+      avgDowntime: Number(m.avgDowntime?.toFixed(2) || 0),
+      avgCutDepth: Number(m.avgCutDepth?.toFixed(2) || 0),
+      avgMaterialRemovalRate: Number(m.avgMaterialRemovalRate?.toFixed(2) || 0),
+      avgSurfaceFinishQuality: Number(m.avgSurfaceFinishQuality?.toFixed(2) || 0),
+      avgToolLife: Number(m.avgToolLife?.toFixed(2) || 0),
+      avgToolWear: Number(m.avgToolWear?.toFixed(2) || 0)
+    }));
+
+    res.json(formattedMachine);
+  } catch (error) {
+    console.error("Error in getMachineDetails:", error);
+    res.status(500).json({ 
+      message: "Error fetching machine details", 
+      error: error.message 
+    });
+  }
+};
