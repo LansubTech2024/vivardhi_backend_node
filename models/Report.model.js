@@ -265,9 +265,9 @@ const productionDataSchema = new mongoose.Schema({
     toolsAvailable: {
         type: Number
     }
-}, {
-    collection: 'factory_data',
-    timestamps: false
+},{
+    collection: 'machines',  // equivalent to tableName
+    timestamps: false       // keeps timestamps disabled as in original
 });
 
 const ProductionData = mongoose.model('ProductionData2', productionDataSchema);

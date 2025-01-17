@@ -39,28 +39,24 @@
 
 
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-// MongoDB connection URI - replace 'opfact' with your database name
-const uri = 'mongodb://localhost:27017/Vivardhi';
+const uri = process.env.MONGODB_URI;
 
-// Connection options
-const options = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-};
 
 // Connection function
 async function connectDatabase() {
     try {
-        await mongoose.connect(uri, options);
+        await mongoose.connect(uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
         console.log('Database connection has been established successfully.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);
     }
 }
 
-// Connect to database
-connectDatabase();
 
 // Export mongoose instance
-module.exports = mongoose;
+module.exports = connectDatabase;

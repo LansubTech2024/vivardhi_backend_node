@@ -20,39 +20,39 @@
 
 // module.exports = GraphModel;
 
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
-// Define the schema
-const GraphSchema = new mongoose.Schema({
-    chw_in_temp: {
-        type: Number,
-        required: false
-    },
-    chw_out_temp: {
-        type: Number,
-        required: false
-    },
-    cow_in_temp: {
-        type: Number,
-        required: false
-    },
-    cow_out_temp: {
-        type: Number,
-        required: false
-    },
-    vaccum_pr: {
-        type: Number,
-        required: false
-    },
-    device_date: {
-        type: Date,
-        required: false
-    }
-}, {
-    collection: 'devices',
-    timestamps: true  // This will add createdAt and updatedAt fields
-});
+// // Define the schema
+// const GraphSchema = new mongoose.Schema({
+//     chw_in_temp: {
+//         type: Number,
+//         required: false
+//     },
+//     chw_out_temp: {
+//         type: Number,
+//         required: false
+//     },
+//     cow_in_temp: {
+//         type: Number,
+//         required: false
+//     },
+//     cow_out_temp: {
+//         type: Number,
+//         required: false
+//     },
+//     vaccum_pr: {
+//         type: Number,
+//         required: false
+//     },
+//     device_date: {
+//         type: Date,
+//         required: false
+//     }
+// }, {
+//     collection: 'devices',
+//     timestamps: true  // This will add createdAt and updatedAt fields
+// });
 
-// Create and export the model
-const GraphModel = mongoose.model('GraphModel', GraphSchema);
-module.exports = GraphModel;
+// // Create and export the model
+// const GraphModel = mongoose.model('GraphModel', GraphSchema);
+// module.exports = GraphModel;

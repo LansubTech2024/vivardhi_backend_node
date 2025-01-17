@@ -26,26 +26,26 @@
 
 // module.exports = ChatMessage;
 
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
-const chatMessageSchema = new mongoose.Schema({
-    sender: {
-        type: String,
-        required: true
-    },
-    message: {
-        type: String,
-        required: true
-    },
-    timestamp: {
-        type: Date,
-        default: Date.now
-    }
-}, {
-    collection: 'chat_messages',
-    timestamps: true
-});
+// const chatMessageSchema = new mongoose.Schema({
+//     sender: {
+//         type: String,
+//         required: true
+//     },
+//     message: {
+//         type: String,
+//         required: true
+//     },
+//     timestamp: {
+//         type: Date,
+//         default: Date.now
+//     }
+// }, {
+//     collection: 'chat_messages',
+//     timestamps: true
+// });
 
-const ChatMessage = mongoose.model('ChatMessage', chatMessageSchema);
+// const ChatMessage = mongoose.model('ChatMessage', chatMessageSchema);
 
-module.exports = ChatMessage;
+// module.exports = ChatMessage;
