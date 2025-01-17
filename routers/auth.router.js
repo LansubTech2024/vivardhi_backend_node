@@ -16,6 +16,6 @@ router.post('/reset-password/:randomString/:expirationTimestamp', authController
 
 
 // New QR code refresh route
-router.post('/refresh-qr', authMiddleware, authController.refreshQRCode);
+//router.post('/refresh-qr', authMiddleware, authController.refreshQRCode);
 
 module.exports = router;
