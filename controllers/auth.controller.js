@@ -42,7 +42,6 @@ const SignUp = async (req, res) => {
     const newUser = new userModel({
       companyname,
       username,
-      phonenumber,
       email,
       password: hashedPassword,
     });
