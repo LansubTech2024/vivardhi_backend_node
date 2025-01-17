@@ -2,7 +2,6 @@ const userModel = require("../models/auth.model");
 const auth = require("../public/auth");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
-const { generateQRCode } = require("../utils/qrGenerator");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -18,18 +17,15 @@ const transporter = nodemailer.createTransport({
 // SignUp Controller
 const SignUp = async (req, res) => {
   try {
-
     const { companyname, username, email, password } = req.body;
     
     if (!companyname || !username || !email || !password) {
-
       return res.status(400).json({
         success: false,
         message: "All fields are required",
       });
     }
     
-    // Changed from Sequelize to MongoDB syntax
     const ExistUser = await userModel.findOne({ email });
     
     if (ExistUser) {
@@ -66,7 +62,6 @@ const SignIn = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Changed from Sequelize to MongoDB syntax
     const User = await userModel.findOne({ email });
     
     if (!User) {
@@ -78,24 +73,14 @@ const SignIn = async (req, res) => {
       return res.status(401).json({ message: "Invalid Password" });
     }
 
-
-    // Generate QR code
-    const qrCode = await generateQRCode(User);
-    
-    // Update user with new QR code - MongoDB syntax
-    await userModel.findByIdAndUpdate(User._id, { qr_code: qrCode });
-
-
     const token = await auth.createToken({
       id: User._id,
       name: User.name,
       email: User.email,
     });
 
-    // Get user data without password - MongoDB syntax
     const userData = await userModel.findOne({ email }).select('-password');
 
-    // Add token to userData
     const userDataWithToken = {
       ...userData.toObject(),
       token,
@@ -105,9 +90,6 @@ const SignIn = async (req, res) => {
       message: "Login successful",
       token,
       userData: userDataWithToken,
-
-      qrCode,
-
     });
   } catch (err) {
     console.error(err);
@@ -118,42 +100,8 @@ const SignIn = async (req, res) => {
   }
 };
 
-const refreshQRCode = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    
-    // Changed to MongoDB syntax
-    const User = await userModel.findById(userId);
-    
-    if (!User) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-
-    const qrCode = await generateQRCode(User);
-    await userModel.findByIdAndUpdate(userId, { qr_code: qrCode });
-
-
-    res.status(200).json({
-      success: true,
-      qrCode: qrImage,
-      whatsappGroupLink
-    });
-
-    // res.status(201).json({ message: "Login successful", token, userData });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
-};
-
 const ForgotPassword = async (req, res) => {
   try {
-    // Changed to MongoDB syntax
     const user = await userModel.findOne({ email: req.body.email });
     
     if (user) {
@@ -184,7 +132,6 @@ const ForgotPassword = async (req, res) => {
           });
         } else {
           try {
-            // Update randomString - MongoDB syntax
             await userModel.findByIdAndUpdate(user._id, { randomString });
             res.status(201).send({
               message: "Password reset mail sent successfully. Random string updated in the database.",
@@ -222,7 +169,6 @@ const ResetPassword = async (req, res) => {
       });
     }
 
-    // Changed to MongoDB syntax
     const user = await userModel.findOne({ randomString });
     
     if (!user || user.randomString !== randomString) {
@@ -240,7 +186,6 @@ const ResetPassword = async (req, res) => {
     if (req.body.newPassword) {
       const hashedPassword = await auth.hashPassword(req.body.newPassword);
       
-      // Update password and clear randomString - MongoDB syntax
       await userModel.findByIdAndUpdate(user._id, {
         password: hashedPassword,
         randomString: null
@@ -267,7 +212,6 @@ const UpdateProfile = async (req, res) => {
     const { userId } = req.params;
     const { companyname, username, email } = req.body;
 
-    // Changed to MongoDB syntax
     const User = await userModel.findById(userId);
     
     if (!User) {
@@ -287,6 +231,5 @@ module.exports = {
   SignIn,
   ForgotPassword,
   ResetPassword,
-  refreshQRCode,
   UpdateProfile,
 };
