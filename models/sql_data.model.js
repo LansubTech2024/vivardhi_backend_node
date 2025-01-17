@@ -1,325 +1,248 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../DB_connection/db_connection'); 
-const Login = require('./auth.model');
 
-const Machine = sequelize.define('Machine', {
-  companyname: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    references: {
-        model: 'Logins',
-        key: 'companyname'
-    }
-},
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const MachineSchema = new Schema({
     zoneName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      machineId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      actualRunTime: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      plannedTime: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      manpower: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      uptime: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      totalDowntimeDuration: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      downtimeReasons: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      totalPieces: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      target: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      productionRate: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      efficiency: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      goodPieces: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      totalProduction: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      rawMaterialUsed: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      defectRate: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      scrapRate: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      partRejectionRate: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      voltage: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      current: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      powerConsumed: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      totalPowerDowntimeDuration: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      powerDowntimeReasons: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      energyConsumption: {
-        type: DataTypes.FLOAT,
-        allowNull: true,
-      },
-      rawMaterialInput: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      rawMaterialOutput: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      wasteScrap: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      wasteDefect: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      wasteRecycled: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-    
-      // Inventory data fields
-      rawMaterialId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      rawMaterialName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      currentStock: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      minimumRequired: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-    
-      // Finished Goods
-      finishedGoodId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      finishedGoodName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      finishedGoodCurrentStock: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      finishedGoodMinimumRequired: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-    
-      // Resource allocation fields
-      workerId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      workerName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      role: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      allocatedHours: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      workedHours: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      leave: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      currentShift: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      allocation: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      equipmentId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      equipmentName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      equipmentAllocatedHours: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      utilizationRate: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      spindleSpeed: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      feedRate: {
-        type: DataTypes.FLOAT,
-        allowNull: true,
-      },
-      cycleTime: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      machineUtilization: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      temperature: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      chuckPressure: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      downtime: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      cutDepth: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      materialRemovalRate: {
-        type: DataTypes.FLOAT,
-        allowNull: true,
-      },
-      surfaceFinishQuality: {
-        type: DataTypes.FLOAT,
-        allowNull: true,
-      },
-    
-      // Production rate fields
-      targetProduction: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      actualProduction: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      overallProductivity: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-    
-      // Tool management fields
-      toolInUseId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      toolInUseName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      toolInUseUsageTime: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      toolInUseCondition: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      toolInUseTotalOperation: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      toolInUseSuccessOperation: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      toolInUseEfficiency: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      toolLife: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      toolWear: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      totalTools: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      toolsAvailable: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-    });
-    Machine.belongsTo(Login, { foreignKey: 'companyname', targetKey: 'companyname' });
-    Login.hasMany(Machine, { foreignKey: 'companyname', sourceKey: 'companyname' });
-    
+        type: String,
+        required: true
+    },
+    machineId: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        required: true
+    },
+    actualRunTime: {
+        type: Number
+    },
+    plannedTime: {
+        type: Number
+    },
+    manpower: {
+        type: Number
+    },
+    uptime: {
+        type: Number
+    },
+    totalDowntimeDuration: {
+        type: Number
+    },
+    downtimeReasons: {
+        type: String
+    },
+    totalPieces: {
+        type: Number
+    },
+    target: {
+        type: Number
+    },
+    productionRate: {
+        type: Number
+    },
+    efficiency: {
+        type: Number
+    },
+    goodPieces: {
+        type: Number
+    },
+    totalProduction: {
+        type: Number
+    },
+    rawMaterialUsed: {
+        type: Number
+    },
+    defectRate: {
+        type: Number
+    },
+    scrapRate: {
+        type: Number
+    },
+    partRejectionRate: {
+        type: Number
+    },
+    voltage: {
+        type: Number
+    },
+    current: {
+        type: Number
+    },
+    powerConsumed: {
+        type: Number
+    },
+    totalPowerDowntimeDuration: {
+        type: Number
+    },
+    powerDowntimeReasons: {
+        type: String
+    },
+    energyConsumption: {
+        type: Number
+    },
+    rawMaterialInput: {
+        type: Number
+    },
+    rawMaterialOutput: {
+        type: Number
+    },
+    wasteScrap: {
+        type: Number
+    },
+    wasteDefect: {
+        type: Number
+    },
+    wasteRecycled: {
+        type: Number
+    },
+
+
+    // Inventory data fields
+    rawMaterialId: {
+        type: String
+    },
+    rawMaterialName: {
+        type: String
+    },
+    currentStock: {
+        type: Number
+    },
+    minimumRequired: {
+        type: Number
+    },
+
+    // Finished Goods
+    finishedGoodId: {
+        type: String
+    },
+    finishedGoodName: {
+        type: String
+    },
+    finishedGoodCurrentStock: {
+        type: Number
+    },
+    finishedGoodMinimumRequired: {
+        type: Number
+    },
+
+    // Resource allocation fields
+    workerId: {
+        type: String
+    },
+    workerName: {
+        type: String
+    },
+    role: {
+        type: String
+    },
+    allocatedHours: {
+        type: Number
+    },
+    workedHours: {
+        type: Number
+    },
+    leave: {
+        type: Number
+    },
+    currentShift: {
+        type: String
+    },
+    allocation: {
+        type: String
+    },
+    equipmentId: {
+        type: String
+    },
+    equipmentName: {
+        type: String
+    },
+    equipmentAllocatedHours: {
+        type: Number
+    },
+    utilizationRate: {
+        type: Number
+    },
+    spindleSpeed: {
+        type: Number
+    },
+    feedRate: {
+        type: Number
+    },
+    cycleTime: {
+        type: Number
+    },
+    machineUtilization: {
+        type: Number
+    },
+    temperature: {
+        type: Number
+    },
+    chuckPressure: {
+        type: Number
+    },
+    downtime: {
+        type: Number
+    },
+    cutDepth: {
+        type: Number
+    },
+    materialRemovalRate: {
+        type: Number
+    },
+    surfaceFinishQuality: {
+        type: Number
+    },
+
+    // Production rate fields
+    targetProduction: {
+        type: Number
+    },
+    actualProduction: {
+        type: Number
+    },
+    overallProductivity: {
+        type: Number
+    },
+
+    // Tool management fields
+    toolInUseId: {
+        type: String
+    },
+    toolInUseName: {
+        type: String
+    },
+    toolInUseUsageTime: {
+        type: Number
+    },
+    toolInUseCondition: {
+        type: String
+    },
+    toolInUseTotalOperation: {
+        type: Number
+    },
+    toolInUseSuccessOperation: {
+        type: Number
+    },
+    toolInUseEfficiency: {
+        type: Number
+    },
+    toolLife: {
+        type: Number
+    },
+    toolWear: {
+        type: Number
+    },
+    totalTools: {
+        type: Number
+    },
+    toolsAvailable: {
+        type: Number
+    }
+}, {
+    timestamps: true
+});
+
+const Machine = mongoose.model('Machine', MachineSchema);
 
 module.exports = Machine;

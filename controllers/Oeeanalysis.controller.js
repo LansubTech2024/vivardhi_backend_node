@@ -1,7 +1,4 @@
 
-const Device = require('../models/Oeeanalysis.model');
-
-exports.calculateOEE = async (req, res) => {
     // try {
     //     const devices = await Device.findAll();
 
@@ -46,10 +43,14 @@ exports.calculateOEE = async (req, res) => {
     //     res.status(500).json({ message: "Failed to calculate OEE" });
     // }
 
-    try {
-        const devices = await Device.findAll();
+    const Device = require('../models/Oeeanalysis.model');
 
-        // Group data by zone and machine
+exports.calculateOEE = async (req, res) => {
+    try {
+        // Changed from findAll() to find({})
+        const devices = await Device.find({});
+        
+        // Rest of the code remains same since it's just data processing
         const zoneWiseData = {};
         devices.forEach(device => {
             const { zoneName, machineId } = device;
@@ -62,26 +63,22 @@ exports.calculateOEE = async (req, res) => {
             zoneWiseData[zoneName][machineId].push(device);
         });
 
-        // Calculate metrics for each machine in each zone
         const zoneResults = Object.entries(zoneWiseData).map(([zoneName, machines]) => {
             const machineResults = Object.entries(machines).map(([machineId, machineData]) => {
                 let totalAvailability = 0;
                 let totalPerformance = 0;
                 let totalQuality = 0;
                 let totalOEE = 0;
-
                 machineData.forEach(device => {
                     const availability = (device.actualRunTime / device.plannedTime) * 100;
                     const performance = (device.totalPieces / device.target) * 100;
                     const quality = (device.goodPieces / device.totalProduction) * 100;
                     const oee = (availability * performance * quality) / 10000;
-
                     totalAvailability += availability;
                     totalPerformance += performance;
                     totalQuality += quality;
                     totalOEE += oee;
                 });
-
                 const count = machineData.length;
                 return {
                     machineId,
@@ -91,13 +88,11 @@ exports.calculateOEE = async (req, res) => {
                     avgOEE: (totalOEE / count).toFixed(2)
                 };
             });
-
             return {
                 zoneName,
                 machines: machineResults
             };
         });
-
         res.json(zoneResults);
     } catch (error) {
         console.error("Error calculating zone-wise OEE:", error);

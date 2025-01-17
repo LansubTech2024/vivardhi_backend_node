@@ -1,44 +1,41 @@
-const { DataTypes} = require('sequelize');
-const sequelize = require('../DB_connection/db_connection');
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const AuthLogin = sequelize.define('AuthLogin', {
+// Define the schema
+const authLoginSchema = new mongoose.Schema({
   companyname: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true
   },
   username: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true
   },
   email: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    type: String,
+    required: true,
     unique: true,
     validate: {
-      isEmail: true
+      validator: function(v) {
+        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
+      },
+      message: props => `${props.value} is not a valid email!`
     }
   },
   password: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true
   },
-  qr_code: {
-    type: DataTypes.TEXT,
-    allowNull: true
+
+
+  resetPasswordToken: {
+    type: String,
+    required: false
   },
-  whatsapp_group_link: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  whatsapp_group_id: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    unique: true
-  },
-  phonenumber: {
-    type: DataTypes.STRING,
-    allowNull: true
+  resetPasswordExpire: {
+    type: Date,
+    required: false
+
   },
   // resetPasswordToken: {
   //   type: DataTypes.STRING,
@@ -49,26 +46,17 @@ const AuthLogin = sequelize.define('AuthLogin', {
   //   allowNull: true,
   // },
   randomString: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
+    type: String,
+    required: false
+  }
+}, {
+  // This will automatically add and manage createdAt and updatedAt fields
+  timestamps: true
 });
 
-// In your admin panel, store group links for each company
-const assignWhatsAppGroup = async (companyId, groupLink) => {
-  await Login.update(
-    { whatsapp_invite_link: groupLink },
-    { where: { id: companyId } }
-  );
-};
+
+// Create the model
+const AuthLogin = mongoose.model('AuthLogin', authLoginSchema);
 
 
 module.exports = AuthLogin;
